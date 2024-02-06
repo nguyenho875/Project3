@@ -134,9 +134,9 @@ static void userInterfaceDisplayInit()
     displayInit();
      
     displayCharPositionWrite ( 0,0 );
-    displayStringWrite( "Temperature:" );
+    displayStringWrite( "Tmp:" );
 
-    displayCharPositionWrite ( 0,1 );
+    displayCharPositionWrite ( 9,0 );
     displayStringWrite( "Gas:" );
     
     displayCharPositionWrite ( 0,2 );
@@ -154,7 +154,7 @@ static void userInterfaceDisplayUpdate()
         accumulatedDisplayTime = 0;
 
         sprintf(temperatureString, "%.0f", temperatureSensorReadCelsius());
-        displayCharPositionWrite ( 12,0 );
+        displayCharPositionWrite ( 4,0 );
         displayStringWrite( temperatureString );
         displayCharPositionWrite ( 14,0 );
         displayStringWrite( "'C" );
