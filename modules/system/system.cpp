@@ -5,12 +5,15 @@
 
 #include "system.h"
 #include "led.h"
+#include "non_blocking_delay.h"
 
 //=====[Declaration of private defines]========================================
 
 //=====[Declaration of private data types]=====================================
 
 //=====[Declaration and initialization of public global objects]===============
+
+nonBlockingDelay system_delay(SYSTEM_TIME_INCREMENT_MS);
 
 //=====[Declaration of external public global variables]=======================
 
@@ -26,14 +29,15 @@ static led mi_led(D0);
 
 void system_init()
 {
+    tickInit();
 }
 
 void system_update()
 {
-    mi_led = ON;
-    delay(100);
-    mi_led = OFF;
-    delay(100);
+    if(system_delay.Read())
+    {
+    mi_led = !mi_led;
+    }
 }
 
 //=====[Implementations of private functions]==================================

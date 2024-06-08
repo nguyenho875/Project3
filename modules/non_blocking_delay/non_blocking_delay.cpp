@@ -19,44 +19,14 @@ static tick_t tickCounter;
 
 //=====[Declarations (prototypes) of private functions]========================
 
-void tickerCallback();
-tick_t tickRead();
+ void tickerCallback();
 
 //=====[Implementations of public functions]===================================
 
+
 void tickInit()
 {
-    ticker.attach( tickerCallback, ((float) 0.001 ));
-}
-
-void nonBlockingDelayInit( nonBlockingDelay_t * delay, tick_t durationValue )
-{
-   delay->duration = durationValue;
-   delay->isRunning = false;
-}
-
-bool nonBlockingDelayRead( nonBlockingDelay_t * delay )
-{
-   bool timeArrived = false;
-   tick_t elapsedTime;
-
-   if( !delay->isRunning ) {
-      delay->startTime = tickCounter;
-      delay->isRunning = true;
-   } else {
-      elapsedTime = tickCounter - delay->startTime;
-      if ( elapsedTime >= delay->duration ) {
-         timeArrived = true;
-         delay->isRunning = false;
-      }
-   }
-
-   return timeArrived;
-}
-
-void nonBlockingDelayWrite( nonBlockingDelay_t * delay, tick_t durationValue )
-{
-   delay->duration = durationValue;
+    ticker.attach( tickerCallback, 1ms);
 }
 
 //=====[Implementations of private functions]==================================
@@ -65,3 +35,37 @@ void tickerCallback( void )
 {
     tickCounter++;
 }
+
+//=====[Implementations of public methods]=====================================
+
+nonBlockingDelay::nonBlockingDelay(tick_t durationValue)
+{
+   duration = durationValue;
+   isRunning = false;
+}
+
+bool nonBlockingDelay::Read( )
+{
+   bool timeArrived = false;
+   tick_t elapsedTime;
+
+   if( !this->isRunning ) {
+      this->startTime = tickCounter;
+      this->isRunning = true;
+   } else {
+      elapsedTime = tickCounter - this->startTime;
+      if ( elapsedTime >= this->duration ) {
+         timeArrived = true;
+         this->isRunning = false;
+      }
+   }
+
+   return timeArrived;
+}
+
+void nonBlockingDelay::Write( tick_t durationValue )
+{
+   this->duration = durationValue;
+}
+
+//=====[Implementations of private methods]====================================
