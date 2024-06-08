@@ -24,24 +24,21 @@
 
 led::led(PinName pin): DO(pin, OFF)
 {
-    state = OFF;
 }
 
 led::led(PinName pin, int value): DO(pin, value)
 {
-    state = value;
 }
 
 void led::write(int value)
 {
     DO = value;
-    state = value;
 }
 
 
 int led::read()
 {
-    return state;
+    return DO;
 }
 
 //=====[Implementations of private methods]====================================

@@ -21,7 +21,7 @@ class led
         led(PinName pin);
 
         // Crea el led y le indica el valor de inicio (ON / OFF)
-        led(PinName, int value);
+        led(PinName pin, int value);
 
         // Setea el led en ON / OFF
         void write(int value);
@@ -41,9 +41,6 @@ class led
         {
             return read();
         }
-
-        // Estado del led
-        int state;
 
     private:
         // Salida digital
