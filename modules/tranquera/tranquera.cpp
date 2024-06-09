@@ -60,12 +60,14 @@ void tranquera::update()
 
 void tranquera::change_position()
 {
-    if(position == ABIERTO){
-        output = ON;
-    }
-    else if(position == CERRADO){
-        output = OFF;
-    }
-    else{
+    switch (position){
+        case ABIERTO:
+            output = ON;
+            break;
+        case CERRADO:
+            output = OFF;
+            break;
+        default:
+            break;
     }
 }
