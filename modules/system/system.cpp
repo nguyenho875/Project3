@@ -4,8 +4,10 @@
 #include "mbed.h"
 
 #include "system.h"
-#include "led.h"
+#include "tranquera.h"
 #include "non_blocking_delay.h"
+#include "button.h"
+#include "_switch.h"
 
 //=====[Declaration of private defines]========================================
 
@@ -21,7 +23,10 @@ nonBlockingDelay system_delay(SYSTEM_TIME_INCREMENT_MS);
 
 //=====[Declaration and initialization of private global variables]============
 
-static led mi_led(D0);
+static tranquera mi_tranquera(PIN_TRANQUERA);
+static button boton_abrir(PIN_BOTON_ABRIR, PullDown);
+static button boton_cerrar(PIN_BOTON_CERRAR, PullDown);
+static _switch switch_cambiar(D8, PullUp);
 
 //=====[Declarations (prototypes) of private functions]========================
 
@@ -36,7 +41,16 @@ void system_update()
 {
     if(system_delay.Read())
     {
-    mi_led = !mi_led;
+        if(boton_abrir){
+            mi_tranquera = ABIERTO;
+        }
+        else if(boton_cerrar){
+            mi_tranquera = CERRADO;
+        }
+        else{
+
+        }
+        mi_tranquera.update();
     }
 }
 

@@ -14,6 +14,8 @@
 
 //=====[Declaration and initialization of private global variables]============
 
+position_t position;
+
 //=====[Declarations (prototypes) of private functions]========================
 
 //=====[Implementations of public functions]===================================
@@ -22,23 +24,48 @@
 
 //=====[Implementations of public methods]=====================================
 
-tranquera::tranquera(PinName pin): salida(pin)
+tranquera::tranquera(PinName pin): output(pin)
 {
+    // Se inicializa en CERRADO
+    position = CERRADO;
 }
 
-tranquera::tranquera(PinName pin, int value): salida(pin, value)
+tranquera::tranquera(PinName pin, int value): output(pin, value)
 {
+    if(value == OFF){
+        position = CERRADO;
+    }
+    else{
+        position = ABIERTO;
+    }
 }
 
-void tranquera::write(int value)
+void tranquera::write(position_t new_position)
 {
-    salida = value;
+    position = new_position;
 }
 
 
 int tranquera::read()
 {
-    return salida;
+    return position;
+}
+
+void tranquera::update()
+{
+    change_position();
 }
 
 //=====[Implementations of private methods]====================================
+
+void tranquera::change_position()
+{
+    if(position == ABIERTO){
+        output = ON;
+    }
+    else if(position == CERRADO){
+        output = OFF;
+    }
+    else{
+    }
+}

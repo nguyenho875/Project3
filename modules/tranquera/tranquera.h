@@ -14,6 +14,11 @@
 
 //=====[Declaration of public data types]======================================
 
+typedef enum{
+    CERRADO,
+    ABIERTO
+} position_t;
+
 //=====[Declaration of public classes]=========================================
 
 class tranquera
@@ -25,16 +30,19 @@ class tranquera
         // Crea la tranquera y le indica el valor de inicio (ON=abierto / OFF=cerrado)
         tranquera(PinName pin, int value);
 
-        // Setea la tranquera en ON=abierto / OFF=cerrado
-        void write(int value);
+        // Pide el cambio de posición a CERRADO o ABIERTO
+        void write(position_t new_position);
 
         // Lee el valor de la tranquera
         int read();
 
+        // Realiza el cambio de posición de la tranquera
+        void update();
+
         // Sobrecarga del operador = para escribir
-        tranquera &operator= (int value)
+        tranquera &operator= (position_t new_position)
         {
-            write(value);
+            write(new_position);
             return *this;
         }
 
@@ -46,7 +54,9 @@ class tranquera
 
     private:
         // leds de salida
-        led salida;
+        led output;
+
+        void change_position();
 
 };
 
