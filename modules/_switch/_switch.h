@@ -14,14 +14,14 @@
 
 //=====[Declaration of public classes]=========================================
 
-class _switch
+class _Switch
 {
     public:
         // Crea el switch y lo inicializa sin Pull
-        _switch(PinName pin);
+        _Switch(PinName pin);
 
         // Crea el switch y lo inicializa en el modo indicado
-        _switch(PinName pin, PinMode mode);
+        _Switch(PinName pin, PinMode mode);
 
         // Lee el valor del switch
         int read();

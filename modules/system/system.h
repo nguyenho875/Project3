@@ -25,9 +25,14 @@
 #define PIN_BOTON_ABRIR D9
 #define PIN_BOTON_CERRAR D10
 
+#define MODE_PIN_SWITCH_BALANZA PullDown
+#define MODE_PIN_SWITCH_SOLO_LECTURA PullDown
+#define MODE_PIN_BOTON_ABRIR PullDown
+#define MODE_PIN_BOTON_CERRAR PullDown
+
 #endif //PLACA
 
-#define SYSTEM_TIME_INCREMENT_MS   100
+#define SYSTEM_TIME_INCREMENT_MS   2000
 
 //=====[Declaration of public data types]======================================
 

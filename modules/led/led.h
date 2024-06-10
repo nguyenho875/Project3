@@ -14,14 +14,14 @@
 
 //=====[Declaration of public classes]=========================================
 
-class led
+class Led
 {
     public:
         // Crea el led y lo inicializa apagado
-        led(PinName pin);
+        Led(PinName pin);
 
         // Crea el led y le indica el valor de inicio (ON / OFF)
-        led(PinName pin, int value);
+        Led(PinName pin, int value);
 
         // Setea el led en ON / OFF
         void write(int value);
@@ -30,7 +30,7 @@ class led
         int read();
 
         // Sobrecarga del operador = para escribir
-        led &operator= (int value)
+        Led &operator= (int value)
         {
             write(value);
             return *this;

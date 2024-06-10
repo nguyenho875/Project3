@@ -21,14 +21,14 @@ typedef enum{
 
 //=====[Declaration of public classes]=========================================
 
-class tranquera
+class Tranquera
 {
     public:
         // Crea la tranquera y la inicializa cerrada
-        tranquera(PinName pin);
+        Tranquera(PinName pin);
 
         // Crea la tranquera y le indica el valor de inicio (ON=abierto / OFF=cerrado)
-        tranquera(PinName pin, int value);
+        Tranquera(PinName pin, int value);
 
         // Pide el cambio de posición a CERRADO o ABIERTO
         void write(position_t new_position);
@@ -40,7 +40,7 @@ class tranquera
         void update();
 
         // Sobrecarga del operador = para escribir
-        tranquera &operator= (position_t new_position)
+        Tranquera &operator= (position_t new_position)
         {
             write(new_position);
             return *this;
@@ -54,7 +54,7 @@ class tranquera
 
     private:
         // leds de salida
-        led output;
+        Led output;
 
         void change_position();
 

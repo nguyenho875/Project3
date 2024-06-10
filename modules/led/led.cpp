@@ -22,21 +22,21 @@
 
 //=====[Implementations of public methods]=====================================
 
-led::led(PinName pin): DO(pin, OFF)
+Led::Led(PinName pin): DO(pin, OFF)
 {
 }
 
-led::led(PinName pin, int value): DO(pin, value)
+Led::Led(PinName pin, int value): DO(pin, value)
 {
 }
 
-void led::write(int value)
+void Led::write(int value)
 {
     DO = value;
 }
 
 
-int led::read()
+int Led::read()
 {
     return DO;
 }

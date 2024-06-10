@@ -22,20 +22,20 @@
 
 //=====[Implementations of public methods]=====================================
 
-_switch::_switch(PinName pin): DI(pin)
+_Switch::_Switch(PinName pin): DI(pin)
 {
 }
 
-_switch::_switch(PinName pin, PinMode mode): DI(pin, mode)
+_Switch::_Switch(PinName pin, PinMode mode): DI(pin, mode)
 {
 }
 
-int _switch::read()
+int _Switch::read()
 {
     return DI;
 }
 
-void _switch::mode(PinMode mode)
+void _Switch::mode(PinMode mode)
 {
     DI.mode(mode);
 }

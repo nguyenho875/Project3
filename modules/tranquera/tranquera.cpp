@@ -24,13 +24,13 @@ position_t position;
 
 //=====[Implementations of public methods]=====================================
 
-tranquera::tranquera(PinName pin): output(pin)
+Tranquera::Tranquera(PinName pin): output(pin)
 {
     // Se inicializa en CERRADO
     position = CERRADO;
 }
 
-tranquera::tranquera(PinName pin, int value): output(pin, value)
+Tranquera::Tranquera(PinName pin, int value): output(pin, value)
 {
     if(value == OFF){
         position = CERRADO;
@@ -40,25 +40,25 @@ tranquera::tranquera(PinName pin, int value): output(pin, value)
     }
 }
 
-void tranquera::write(position_t new_position)
+void Tranquera::write(position_t new_position)
 {
     position = new_position;
 }
 
 
-int tranquera::read()
+int Tranquera::read()
 {
     return position;
 }
 
-void tranquera::update()
+void Tranquera::update()
 {
     change_position();
 }
 
 //=====[Implementations of private methods]====================================
 
-void tranquera::change_position()
+void Tranquera::change_position()
 {
     switch (position){
         case ABIERTO:

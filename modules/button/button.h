@@ -14,14 +14,14 @@
 
 //=====[Declaration of public classes]=========================================
 
-class button
+class Button
 {
     public:
         // Crea el boton y lo inicializa sin Pull
-        button(PinName pin);
+        Button(PinName pin);
 
         // Crea el boton y lo inicializa en el modo indicado
-        button(PinName pin, PinMode mode);
+        Button(PinName pin, PinMode mode);
 
         // Lee el valor del boton
         int read();

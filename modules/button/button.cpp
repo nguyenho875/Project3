@@ -22,20 +22,20 @@
 
 //=====[Implementations of public methods]=====================================
 
-button::button(PinName pin): DI(pin)
+Button::Button(PinName pin): DI(pin)
 {
 }
 
-button::button(PinName pin, PinMode mode): DI(pin, mode)
+Button::Button(PinName pin, PinMode mode): DI(pin, mode)
 {
 }
 
-int button::read()
+int Button::read()
 {
     return DI;
 }
 
-void button::mode(PinMode mode)
+void Button::mode(PinMode mode)
 {
     DI.mode(mode);
 }
