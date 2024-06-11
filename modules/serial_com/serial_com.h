@@ -7,6 +7,7 @@
 
 #include "mbed.h"
 #include "arm_book_lib.h"
+//#include <string>
 
 //=====[Declaration of public defines]=========================================
 
@@ -21,28 +22,21 @@ class SerialCom
         SerialCom(PinName Tx, PinName Rx, int baudrate);
 
         // Lee un caracter
-        char pcSerialComCharRead();
+        char char_read();
 
         // Escribe un string
-        void pcSerialComStringWrite(const char* str);
+        void string_write(const char* str);
 
-        // Setea el led en ON / OFF
-        void write(int value);
+        // Escribe un float
+        void float_write(const float str);
 
-        // Lee el valor del led
-        int read();
-
-        // Sobrecarga del operador = para escribir
-        SerialCom &operator= (const char* str)
-        {
-            pcSerialComStringWrite(str);
-            return *this;
-        }
+        // Escribe un int
+        void int_write(const int str);
 
         // Sobrecarga de char() para leer
         operator char()
         {
-            return pcSerialComCharRead();
+            return char_read();
         }
 
     private:

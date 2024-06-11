@@ -26,7 +26,7 @@ SerialCom::SerialCom(PinName Tx, PinName Rx, int baudrate): serial_com(Tx, Rx, b
 {
 }
 
-char SerialCom::pcSerialComCharRead()
+char SerialCom::char_read()
 {
     char receivedChar = '\0';
     if( serial_com.readable() ) {
@@ -35,9 +35,23 @@ char SerialCom::pcSerialComCharRead()
     return receivedChar;
 }
 
-void SerialCom::pcSerialComStringWrite( const char* str )
+void SerialCom::string_write( const char* str )
 {
     serial_com.write( str, strlen(str) );
+}
+
+void SerialCom::float_write( const float str)
+{
+    char aux[100] = "";
+    sprintf(aux, "%f \n", str);
+    serial_com.write( aux, strlen(aux) );
+}
+
+void SerialCom::int_write( const int str )
+{
+    char aux[100] = "";
+    sprintf(aux, "%d \n", str);
+    serial_com.write( aux, strlen(aux) );
 }
 
 //=====[Implementations of private methods]====================================

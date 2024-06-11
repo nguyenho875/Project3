@@ -11,6 +11,7 @@
 #include "scale.h"
 #include "led.h"
 #include "serial_com.h"
+#include <cstdio>
 
 //=====[Declaration of private defines]========================================
 
@@ -87,7 +88,8 @@ void system_update()
         }
 
         tranquera.update();
-        pc = "gomito\n";
+
+        pc.float_write(scale);
     }
 }
 

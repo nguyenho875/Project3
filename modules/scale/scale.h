@@ -32,8 +32,8 @@ class Scale
         // Pide el cambio de estado a ENCENDIDO o APAGADO
         void write_state(state_t new_state);
 
-        // Sobrecarga de int() para leer
-        operator int()
+        // Sobrecarga de float() para leer
+        operator float()
         {
             return read();
         }
