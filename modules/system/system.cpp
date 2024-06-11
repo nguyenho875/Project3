@@ -10,6 +10,7 @@
 //#include "_switch.h"
 #include "scale.h"
 #include "led.h"
+#include "serial_com.h"
 
 //=====[Declaration of private defines]========================================
 
@@ -33,6 +34,7 @@ static Tranquera tranquera(PIN_TRANQUERA);
 static Scale scale(PIN_BALANZA);
 static Led led_balanza(D1);
 static Led led_switch_balanza(D2);
+static SerialCom pc(USBTX, USBRX, 115200);
 //static Button boton_abrir(PIN_BOTON_ABRIR, MODE_PIN_BOTON_ABRIR);
 //static Button boton_cerrar(PIN_BOTON_CERRAR, MODE_PIN_BOTON_CERRAR);
 
@@ -85,6 +87,7 @@ void system_update()
         }
 
         tranquera.update();
+        pc = "gomito\n";
     }
 }
 

@@ -1,17 +1,12 @@
 //=====[Libraries]=============================================================
 
-#include "mbed.h"
-#include "arm_book_lib.h"
-
-#include "pc_serial_com.h"
+#include "serial_com.h"
 
 //=====[Declaration of private defines]========================================
 
 //=====[Declaration of private data types]=====================================
 
 //=====[Declaration and initialization of public global objects]===============
-
-UnbufferedSerial uartUsb(USBTX, USBRX, 115200);
 
 //=====[Declaration of external public global variables]=======================
 
@@ -21,40 +16,28 @@ UnbufferedSerial uartUsb(USBTX, USBRX, 115200);
 
 //=====[Declarations (prototypes) of private functions]========================
 
-static void pcSerialComStringRead( char* str, int strLength );
-
 //=====[Implementations of public functions]===================================
 
-void pcSerialComInit()
+//=====[Implementations of private functions]==================================
+
+//=====[Implementations of public methods]=====================================
+
+SerialCom::SerialCom(PinName Tx, PinName Rx, int baudrate): serial_com(Tx, Rx, baudrate)
 {
 }
 
-char pcSerialComCharRead()
+char SerialCom::pcSerialComCharRead()
 {
     char receivedChar = '\0';
-    if( uartUsb.readable() ) {
-        uartUsb.read( &receivedChar, 1 );
+    if( serial_com.readable() ) {
+        serial_com.read( &receivedChar, 1 );
     }
     return receivedChar;
 }
 
-void pcSerialComStringWrite( const char* str )
+void SerialCom::pcSerialComStringWrite( const char* str )
 {
-    uartUsb.write( str, strlen(str) );
+    serial_com.write( str, strlen(str) );
 }
 
-void pcSerialComUpdate()
-{
-}
-
-//=====[Implementations of private functions]==================================
-
-static void pcSerialComStringRead( char* str, int strLength )
-{
-    int strIndex;
-    for ( strIndex = 0; strIndex < strLength; strIndex++) {
-        uartUsb.read( &str[strIndex] , 1 );
-        uartUsb.write( &str[strIndex] ,1 );
-    }
-    str[strLength]='\0';
-}
+//=====[Implementations of private methods]====================================
