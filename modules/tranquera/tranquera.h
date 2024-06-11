@@ -56,7 +56,8 @@ class Tranquera
         // leds de salida
         Led output;
 
-        void change_position();
+        // Actualiza la posición de la tranquera
+        void update_position();
 
 };
 

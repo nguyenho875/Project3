@@ -53,12 +53,12 @@ int Tranquera::read()
 
 void Tranquera::update()
 {
-    change_position();
+    update_position();
 }
 
 //=====[Implementations of private methods]====================================
 
-void Tranquera::change_position()
+void Tranquera::update_position()
 {
     switch (position){
         case ABIERTO:
