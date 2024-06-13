@@ -5,6 +5,7 @@
 */
 
 #include "MFRC522.h"
+#include "arm_book_lib.h"
 
 static const char* const _TypeNamePICC[] =
 {
@@ -38,6 +39,11 @@ static const char* const _ErrorMessage[] =
 
 #define MFRC522_MaxPICCs (sizeof(_TypeNamePICC)/sizeof(_TypeNamePICC[0]))
 #define MFRC522_MaxError (sizeof(_ErrorMessage)/sizeof(_ErrorMessage[0]))
+
+void wait_ms(int ms){
+    delay(ms);
+    return;
+}
 
 /////////////////////////////////////////////////////////////////////////////////////
 // Functions for setting up the driver

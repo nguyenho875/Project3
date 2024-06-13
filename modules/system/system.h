@@ -32,6 +32,12 @@
 #define MODE_PIN_BOTON_ABRIR PullDown
 #define MODE_PIN_BOTON_CERRAR PullDown
 
+#define PIN_RFID_MOSI PF_9
+#define PIN_RFID_MISO PF_8
+#define PIN_RFID_SCLK PF_7
+#define PIN_RFID_RESET PG_1
+#define PIN_RFID_CS PE_3
+
 #endif //PLACA
 
 #define SYSTEM_TIME_INCREMENT_MS   100
