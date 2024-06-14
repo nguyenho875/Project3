@@ -33,6 +33,9 @@ class SerialCom
         // Escribe un int
         void int_write(const int str);
 
+        // Escribe un byte en hexadecimal
+        void byte_write(const uint8_t str);
+
         // Sobrecarga de char() para leer
         operator char()
         {

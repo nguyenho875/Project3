@@ -29,6 +29,9 @@ class Scale
         // Lee el valor de la balanza, entre 0 y 500 kg. -1 si la balanza está apagada
         float read();
 
+        // Lee el valor del estado de la balanza
+        state_t read_state();
+
         // Pide el cambio de estado a ENCENDIDO o APAGADO
         void write_state(state_t new_state);
 

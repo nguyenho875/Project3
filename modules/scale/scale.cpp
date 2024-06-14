@@ -41,6 +41,11 @@ float Scale::read()
     }
 }
 
+state_t Scale::read_state()
+{
+    return state;
+}
+
 void Scale::write_state(state_t new_state)
 {
     state = new_state;

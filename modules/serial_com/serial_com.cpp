@@ -54,4 +54,11 @@ void SerialCom::int_write( const int str )
     serial_com.write( aux, strlen(aux) );
 }
 
+void SerialCom::byte_write( const uint8_t str )
+{
+    char aux[100] = "";
+    sprintf(aux, "%X", str);
+    serial_com.write( aux, strlen(aux) );
+}
+
 //=====[Implementations of private methods]====================================
