@@ -150,7 +150,6 @@ void wifiComUpdate()
             wifiComDelay.Start(DELAY_5_SECONDS);
             //nonBlockingDelayWrite(&wifiComDelay, DELAY_5_SECONDS);
             wifiComState = WIFI_STATE_SEND_CWMODE;
-            pc_.string_write("AT responded\r\n");
          }
          if(wifiComDelay.Read()){
          //if (nonBlockingDelayRead(&wifiComDelay)) {
@@ -176,7 +175,6 @@ void wifiComUpdate()
             wifiComDelay.Start(DELAY_5_SECONDS);
             //nonBlockingDelayWrite(&wifiComDelay, DELAY_5_SECONDS);
             wifiComState = WIFI_STATE_SEND_CWJAP_IS_SET;
-            pc_.string_write("AT+CWMODE=1 responded\r\n");
          }
          if(wifiComDelay.Read()){
          //if (nonBlockingDelayRead(&wifiComDelay)) {
@@ -200,8 +198,10 @@ void wifiComUpdate()
       case WIFI_STATE_WAIT_CWJAP_IS_SET:
          if (isExpectedResponse()) {
             wifiComExpectedResponse = responseOk;
+            pc_.string_write("Connected to: ");
+            pc_.string_write(wifiComApSsid);
+            pc_.string_write("\r\n");
             wifiComState = WIFI_STATE_SEND_CIFSR;
-            pc_.string_write( "AT+CWJAP? responded: connected\r\n" );
          }
          if(wifiComDelay.Read()){
          //if (nonBlockingDelayRead(&wifiComDelay)) {
@@ -214,6 +214,9 @@ void wifiComUpdate()
       case WIFI_STATE_SEND_CWJAP_SET:
          if(wifiComDelay.Read()){
          //if (nonBlockingDelayRead(&wifiComDelay)) {
+            pc_.string_write("Attemping connection to: ");
+            pc_.string_write(wifiComApSsid);
+            pc_.string_write("\r\n");
             wifiComStringWrite( "AT+CWJAP=\"" );
             wifiComStringWrite( wifiComApSsid );
             wifiComStringWrite( "\",\"" );
@@ -231,7 +234,6 @@ void wifiComUpdate()
          if (isExpectedResponse()) {
             wifiComExpectedResponse = responseCwjap2;
             wifiComState = WIFI_STATE_WAIT_CWJAP_SET_2;
-            pc_.string_write( "AT+CWJAP= responded stage 1\r\n" );
          }
          if(wifiComDelay.Read()){
          //if (nonBlockingDelayRead(&wifiComDelay)) {
@@ -246,7 +248,6 @@ void wifiComUpdate()
       case WIFI_STATE_WAIT_CWJAP_SET_2:
          if (isExpectedResponse()) {
             wifiComState = WIFI_STATE_SEND_CIFSR;
-            pc_.string_write( "AT+CWJAP= responded stage 2\r\n" );
          }
          if(wifiComDelay.Read()){
          //if (nonBlockingDelayRead(&wifiComDelay)) {
@@ -273,7 +274,6 @@ void wifiComUpdate()
          if (isExpectedResponse()) {
             wifiComState = WIFI_STATE_LOAD_IP;
             IpStringPositionIndex = 0;
-            pc_.string_write( "AT+CIFSR responded\r\n" );
          }
          if(wifiComDelay.Read()){
          //if (nonBlockingDelayRead(&wifiComDelay)) {
@@ -291,8 +291,10 @@ void wifiComUpdate()
                IpStringPositionIndex++;
             } else {
                wifiComIpAddress[IpStringPositionIndex] = '\0';
-               pc_.string_write("IP address assigned correctly\r\n\r\n");
+               pc_.string_write("IP address assigned correctly:\r\n");
                wifiComState = WIFI_STATE_SEND_CIPMUX;
+               pc_.string_write(wifiComIpAddress);
+                pc_.string_write("\r\n");
             }
          }
       break;
