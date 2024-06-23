@@ -44,6 +44,20 @@ nonBlockingDelay::nonBlockingDelay(tick_t durationValue)
    isRunning = false;
 }
 
+void nonBlockingDelay::Start()
+{
+    this->startTime = tickCounter;
+    this->isRunning = true;
+}
+
+void nonBlockingDelay::Start(tick_t new_duration)
+{
+    this->startTime = tickCounter;
+    this->isRunning = true;
+    this->duration = new_duration;
+}
+
+/*
 bool nonBlockingDelay::Read( )
 {
    bool timeArrived = false;
@@ -61,6 +75,20 @@ bool nonBlockingDelay::Read( )
    }
 
    return timeArrived;
+}
+*/
+
+bool nonBlockingDelay::Read( )
+{
+    bool timeArrived = false;
+    tick_t elapsedTime = tickCounter - this->startTime;
+
+    if ( elapsedTime >= this->duration ) {
+        timeArrived = true;
+        this->isRunning = false;
+    }
+
+    return timeArrived;
 }
 
 void nonBlockingDelay::Write( tick_t durationValue )

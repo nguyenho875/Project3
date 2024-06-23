@@ -18,8 +18,10 @@ typedef uint64_t tick_t;
 class nonBlockingDelay {
     public:
         nonBlockingDelay(tick_t durationValue);
-        bool Read( );
-        void Write( tick_t durationValue );
+        void Start();
+        void Start(tick_t new_duration);
+        bool Read();
+        void Write(tick_t durationValue);
     private:
         tick_t startTime;
         tick_t duration;
