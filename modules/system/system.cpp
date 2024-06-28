@@ -3,8 +3,6 @@
 #include "arm_book_lib.h"
 #include "mbed.h"
 
-#include "MQTTClient.h"
-
 #include "system.h"
 #include "tranquera.h"
 #include "non_blocking_delay.h"
@@ -14,7 +12,6 @@
 #include "led.h"
 #include "serial_com.h"
 #include "MFRC522.h"
-#include "wifi_aux.h"
 
 //=====[Declaration of private defines]========================================
 
@@ -27,30 +24,36 @@
 //static Scale scale(PIN_BALANZA);
 //static Led led_balanza(D1);
 //static Led led_switch_balanza(D2);
-//static SerialCom pc(USBTX, USBRX, 115200);
+static SerialCom pc(USBTX, USBRX, 115200);
 //static MFRC522 rfid(PIN_RFID_MOSI, PIN_RFID_MISO, PIN_RFID_SCLK, PIN_RFID_CS, PIN_RFID_RESET);
 //static Button boton_abrir(PIN_BOTON_ABRIR, MODE_PIN_BOTON_ABRIR);
 //static Button boton_cerrar(PIN_BOTON_CERRAR, MODE_PIN_BOTON_CERRAR);
 // ---
 
+static DigitalIn pin_MQTT_status(PG_2, PullDown);
+static SerialCom esp32(PC_12, PD_2, 115200);
+
 // ---Delay---
 nonBlockingDelay system_delay(SYSTEM_TIME_INCREMENT_MS);
+nonBlockingDelay delay_MQTT_test(500);
 // ---
+
 
 // ---Interrupciones---
 //InterruptIn int_boton_abrir(PIN_BOTON_ABRIR, MODE_PIN_BOTON_ABRIR);
 //InterruptIn int_boton_cerrar(PIN_BOTON_CERRAR, MODE_PIN_BOTON_CERRAR);
 //InterruptIn int_scale(PIN_SWITCH_BALANZA, MODE_PIN_SWITCH_BALANZA);
+InterruptIn int_MQTT_status(PG_2, PullDown);
 // ---
 
 //=====[Declaration of external public global variables]=======================
 
 //=====[Declaration and initialization of public global variables]=============
 
-const char * mi_red = "Telecentro-5401";
-const char * mi_password = "Z2NKJZ3WYJFD";
-
 //=====[Declaration and initialization of private global variables]============
+
+MQTT_status_t MQTT_status;
+bool led_esp32 = false;
 
 //=====[Declarations (prototypes) of private functions]========================
 
@@ -58,16 +61,30 @@ const char * mi_password = "Z2NKJZ3WYJFD";
 //static void int_boton_cerrar_callback();
 //static void int_scale_callback_on();
 //static void int_scale_callback_off();
+static void int_MQTT_status_callback_on();
+static void int_MQTT_status_callback_off();
 
 //=====[Implementations of public functions]===================================
 
 void system_init()
 {
     tickInit();
-    wifiComInit();
-    //wifiComSetWiFiComApSsid(mi_red);
-
     system_delay.Start();
+    delay_MQTT_test.Start();
+
+    int_MQTT_status.fall(&int_MQTT_status_callback_off);
+    int_MQTT_status.rise(&int_MQTT_status_callback_on);
+
+    if(pin_MQTT_status == ON){
+        MQTT_status = CONECTADO;
+    }
+    else if(pin_MQTT_status == OFF){
+        MQTT_status = DESCONECTADO;
+    }
+
+    while(MQTT_status == DESCONECTADO){
+    }
+    esp32.string_write("suscribe:TestTopic\n");
 
     /*
     rfid.PCD_Init();
@@ -135,8 +152,22 @@ void system_update()
             }
         }
     */
+        if(MQTT_status == CONECTADO){
+            if(delay_MQTT_test.Read()){
+                delay_MQTT_test.Start();
+/*
+                if(!led_esp32){
+                    esp32.string_write("Entrada/01:1\n");
+                    led_esp32 = true;
+                }
+                else{
+                    esp32.string_write("Entrada/01:0\n");
+                    led_esp32 = false;
+                }*/
+                esp32.string_write("subscribe:TestTopic\n");
+            }
+        }
     }
-    wifiComUpdate();
 }
 
 //=====[Implementations of private functions]==================================
@@ -162,3 +193,14 @@ static void int_scale_callback_off()
     scale = APAGADO;
 }
 */
+
+static void int_MQTT_status_callback_on()
+{
+    MQTT_status = CONECTADO;
+    esp32.string_write("suscribe:TestTopic\n");
+}
+
+static void int_MQTT_status_callback_off()
+{
+    MQTT_status = DESCONECTADO;
+}

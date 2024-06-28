@@ -35,6 +35,26 @@ char SerialCom::char_read()
     return receivedChar;
 }
 
+int SerialCom::string_read(char* buf, int buf_size, int timeout_ms) {
+    Timer timer;
+    timer.start();
+    int idx = 0;
+
+    while (idx < buf_size - 1 && timer.read_ms() < timeout_ms) {
+        if (serial_com.readable()) {
+            serial_com.read(&buf[idx], 1);
+            if (buf[idx] == '\n') {
+                buf[idx + 1] = '\0'; // Termina la cadena con null character
+                return idx + 1; // Retorna la longitud de la cadena leída
+            }
+            idx++;
+        }
+    }
+
+    buf[idx] = '\0'; // Termina la cadena con null character
+    return idx; // Retorna la longitud de la cadena leída
+}
+
 void SerialCom::string_write( const char* str )
 {
     serial_com.write( str, strlen(str) );

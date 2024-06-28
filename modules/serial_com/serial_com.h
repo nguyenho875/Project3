@@ -24,6 +24,9 @@ class SerialCom
         // Lee un caracter
         char char_read();
 
+        //
+        int string_read(char* buf, int buf_size, int timeout_ms);
+
         // Escribe un string
         void string_write(const char* str);
 

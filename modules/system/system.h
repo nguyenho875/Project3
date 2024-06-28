@@ -40,9 +40,14 @@
 
 #endif //PLACA
 
-#define SYSTEM_TIME_INCREMENT_MS   100
+#define SYSTEM_TIME_INCREMENT_MS   50
 
 //=====[Declaration of public data types]======================================
+
+typedef enum{
+    CONECTADO,
+    DESCONECTADO
+} MQTT_status_t;
 
 //=====[Declarations (prototypes) of public functions]=========================
 
