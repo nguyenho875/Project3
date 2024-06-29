@@ -11,7 +11,9 @@
 #include "scale.h"
 #include "led.h"
 #include "serial_com.h"
-#include "MFRC522.h"
+//#include "MFRC522.h"
+#include "MQTT.h"
+#include "rfid.h"
 
 //=====[Declaration of private defines]========================================
 
@@ -24,18 +26,15 @@
 //static Scale scale(PIN_BALANZA);
 //static Led led_balanza(D1);
 //static Led led_switch_balanza(D2);
-static SerialCom pc(USBTX, USBRX, 115200);
-//static MFRC522 rfid(PIN_RFID_MOSI, PIN_RFID_MISO, PIN_RFID_SCLK, PIN_RFID_CS, PIN_RFID_RESET);
+static SerialCom pc(USBTX, USBRX, PC_BAUDRATE);
+static RFID rfid_reader(PIN_RFID_MOSI, PIN_RFID_MISO, PIN_RFID_SCLK, PIN_RFID_CS, PIN_RFID_RESET, PIN_LED_LECTURA);
 //static Button boton_abrir(PIN_BOTON_ABRIR, MODE_PIN_BOTON_ABRIR);
 //static Button boton_cerrar(PIN_BOTON_CERRAR, MODE_PIN_BOTON_CERRAR);
+static MQTT mqtt(PIN_MQTT_TX, PIN_MQTT_RX, MQTT_BAUDRATE, PIN_MQTT_STATUS, PIN_LED_WIFI_SIN_CONEXION, PIN_LED_WIFI_CONECTADO);
 // ---
-
-static DigitalIn pin_MQTT_status(PG_2, PullDown);
-static SerialCom esp32(PC_12, PD_2, 115200);
 
 // ---Delay---
 nonBlockingDelay system_delay(SYSTEM_TIME_INCREMENT_MS);
-nonBlockingDelay delay_MQTT_test(500);
 // ---
 
 
@@ -43,7 +42,7 @@ nonBlockingDelay delay_MQTT_test(500);
 //InterruptIn int_boton_abrir(PIN_BOTON_ABRIR, MODE_PIN_BOTON_ABRIR);
 //InterruptIn int_boton_cerrar(PIN_BOTON_CERRAR, MODE_PIN_BOTON_CERRAR);
 //InterruptIn int_scale(PIN_SWITCH_BALANZA, MODE_PIN_SWITCH_BALANZA);
-InterruptIn int_MQTT_status(PG_2, PullDown);
+InterruptIn int_MQTT_status(PIN_MQTT_STATUS, PullDown);
 // ---
 
 //=====[Declaration of external public global variables]=======================
@@ -52,8 +51,7 @@ InterruptIn int_MQTT_status(PG_2, PullDown);
 
 //=====[Declaration and initialization of private global variables]============
 
-MQTT_status_t MQTT_status;
-bool led_esp32 = false;
+char * lectura_rfid = nullptr;
 
 //=====[Declarations (prototypes) of private functions]========================
 
@@ -70,25 +68,11 @@ void system_init()
 {
     tickInit();
     system_delay.Start();
-    delay_MQTT_test.Start();
 
-    int_MQTT_status.fall(&int_MQTT_status_callback_off);
-    int_MQTT_status.rise(&int_MQTT_status_callback_on);
+    int_MQTT_status.rise(&int_MQTT_status_callback_off);
+    int_MQTT_status.fall(&int_MQTT_status_callback_on);
 
-    if(pin_MQTT_status == ON){
-        MQTT_status = CONECTADO;
-    }
-    else if(pin_MQTT_status == OFF){
-        MQTT_status = DESCONECTADO;
-    }
-
-    while(MQTT_status == DESCONECTADO){
-    }
-    esp32.string_write("suscribe:TestTopic\n");
-
-    /*
-    rfid.PCD_Init();
-
+/*
     if(MODE_PIN_BOTON_ABRIR == PullDown){
         int_boton_abrir.rise(&int_boton_abrir_callback);
     }
@@ -113,6 +97,12 @@ void system_update()
     if(system_delay.Read())
     {
         system_delay.Start();
+
+        lectura_rfid = rfid_reader.read();
+        if(lectura_rfid != nullptr){
+            mqtt.publish("lectura", lectura_rfid);
+        }
+
         /*
         if(scale.read_state() == APAGADO){
             led_switch_balanza = ON;
@@ -124,23 +114,28 @@ void system_update()
         tranquera.update();
 
         //pc.float_write(scale);
-
+*/
+/*
         // Look for new cards
         if (rfid.PICC_IsNewCardPresent()){
             // Select one of the cards
             if (rfid.PICC_ReadCardSerial()){
                 // Print Card UID
                 //pc.string_write("Card UID:");
+                char id[rfid.uid.size+1];
                 for (uint8_t i = 0; i < rfid.uid.size; i++){
                     //char aux[10] = "";
                     //sprintf(aux, " %02X", rfid.uid.uidByte[i]);
-
+                    id[i] = rfid.uid.uidByte[i];
                     pc.byte_write(rfid.uid.uidByte[i]);
-                    pc.string_write(" ");
+                    //pc.string_write(" ");
                 }
+                id[rfid.uid.size] = '\0';
+                esp32.publish("lectura", id);
+                pc.string_write(id);
                 pc.string_write("\n\r");
-
-                
+*/
+                /*
                 // Print Card type
                 uint8_t piccType = rfid.PICC_GetType(rfid.uid.sak);
                 //pc.string_write("PICC Type: %s \n\r", rfid.PICC_GetTypeName(piccType));
@@ -148,25 +143,9 @@ void system_update()
                 sprintf(aux, "PICC Type: %s \n\r", rfid.PICC_GetTypeName(piccType));
                 pc.string_write(aux);
                 
-            
             }
         }
-    */
-        if(MQTT_status == CONECTADO){
-            if(delay_MQTT_test.Read()){
-                delay_MQTT_test.Start();
-/*
-                if(!led_esp32){
-                    esp32.string_write("Entrada/01:1\n");
-                    led_esp32 = true;
-                }
-                else{
-                    esp32.string_write("Entrada/01:0\n");
-                    led_esp32 = false;
-                }*/
-                esp32.string_write("subscribe:TestTopic\n");
-            }
-        }
+        */
     }
 }
 
@@ -196,11 +175,10 @@ static void int_scale_callback_off()
 
 static void int_MQTT_status_callback_on()
 {
-    MQTT_status = CONECTADO;
-    esp32.string_write("suscribe:TestTopic\n");
+    mqtt.update_status(CONECTADO);
 }
 
 static void int_MQTT_status_callback_off()
 {
-    MQTT_status = DESCONECTADO;
+    mqtt.update_status(DESCONECTADO);
 }
