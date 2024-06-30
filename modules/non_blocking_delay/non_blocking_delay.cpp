@@ -14,86 +14,103 @@
 
 //=====[Declaration and initialization of private global variables]============
 
-static Ticker ticker;
-static tick_t tickCounter;
-
 //=====[Declarations (prototypes) of private functions]========================
-
- void tickerCallback();
 
 //=====[Implementations of public functions]===================================
 
-
-void tickInit()
-{
-    ticker.attach( tickerCallback, 1ms);
-}
-
 //=====[Implementations of private functions]==================================
-
-void tickerCallback( void ) 
-{
-    tickCounter++;
-}
 
 //=====[Implementations of public methods]=====================================
 
 nonBlockingDelay::nonBlockingDelay(tick_t durationValue)
 {
-   duration = durationValue;
-   isRunning = false;
+    //globalTicker.attach(callback(this, &nonBlockingDelay::globalTickerCallback), 1ms);
+    nonBlockingDelay::SetDuration(durationValue);
+    nonBlockingDelay::SetCallback(nullptr);
+    this->isRunning = false;
+}
+
+nonBlockingDelay::nonBlockingDelay(tick_t durationValue, Callback<void()> cb)
+{
+    //globalTicker.attach(callback(this, &nonBlockingDelay::globalTickerCallback), 1ms);
+    nonBlockingDelay::SetDuration(durationValue);
+    nonBlockingDelay::SetCallback(cb);
+    this->isRunning = false;
 }
 
 void nonBlockingDelay::Start()
 {
-    this->startTime = tickCounter;
+    //this->startTime = tickCounter;
     this->isRunning = true;
+    if(this->my_callback){
+        this->ticker.attach(callback(this, &nonBlockingDelay::tickerCallback), std::chrono::milliseconds(this->duration));
+    }
+    this->ready_ticker.attach(callback(this, &nonBlockingDelay::readyTickerCallback), std::chrono::milliseconds(this->duration));
 }
 
 void nonBlockingDelay::Start(tick_t new_duration)
 {
-    this->startTime = tickCounter;
+    //this->startTime = tickCounter;
     this->isRunning = true;
-    this->duration = new_duration;
-}
-
-/*
-bool nonBlockingDelay::Read( )
-{
-   bool timeArrived = false;
-   tick_t elapsedTime;
-
-   if( !this->isRunning ) {
-      this->startTime = tickCounter;
-      this->isRunning = true;
-   } else {
-      elapsedTime = tickCounter - this->startTime;
-      if ( elapsedTime >= this->duration ) {
-         timeArrived = true;
-         this->isRunning = false;
-      }
-   }
-
-   return timeArrived;
-}
-*/
-
-bool nonBlockingDelay::Read( )
-{
-    bool timeArrived = false;
-    tick_t elapsedTime = tickCounter - this->startTime;
-
-    if ( elapsedTime >= this->duration ) {
-        timeArrived = true;
-        this->isRunning = false;
+    nonBlockingDelay::SetDuration(new_duration);
+    if(this->my_callback){
+        this->ticker.attach(callback(this, &nonBlockingDelay::tickerCallback), std::chrono::milliseconds(this->duration));
     }
-
-    return timeArrived;
+    this->ready_ticker.attach(callback(this, &nonBlockingDelay::readyTickerCallback), std::chrono::milliseconds(this->duration));
 }
 
-void nonBlockingDelay::Write( tick_t durationValue )
+void nonBlockingDelay::Start(tick_t new_duration, Callback<void()> cb)
+{
+    //this->startTime = tickCounter;
+    this->isRunning = true;
+    nonBlockingDelay::SetDuration(new_duration);
+    nonBlockingDelay::SetCallback(cb);
+    this->ticker.attach(callback(this, &nonBlockingDelay::tickerCallback), std::chrono::milliseconds(this->duration));
+    this->ready_ticker.attach(callback(this, &nonBlockingDelay::readyTickerCallback), std::chrono::milliseconds(this->duration));
+}
+
+void nonBlockingDelay::Start(Callback<void()> cb)
+{
+    //this->startTime = tickCounter;
+    this->isRunning = true;
+    nonBlockingDelay::SetCallback(cb);
+    this->ticker.attach(callback(this, &nonBlockingDelay::tickerCallback), std::chrono::milliseconds(this->duration));
+    this->ready_ticker.attach(callback(this, &nonBlockingDelay::readyTickerCallback), std::chrono::milliseconds(this->duration));
+}
+
+bool nonBlockingDelay::isReady()
+{
+    return !this->isRunning;
+}
+
+void nonBlockingDelay::SetDuration(tick_t durationValue)
 {
    this->duration = durationValue;
 }
 
+void nonBlockingDelay::SetCallback(Callback<void()> cb)
+{
+   this->my_callback = cb;
+   if(!this->my_callback){
+       this->ticker.detach();
+   }
+}
+
 //=====[Implementations of private methods]====================================
+
+//void nonBlockingDelay::globalTickerCallback(void) 
+//{
+//    this->tickCounter++;
+//}
+
+void nonBlockingDelay::tickerCallback()
+{
+    if (this->my_callback) {
+        this->my_callback();
+    }
+}
+
+void nonBlockingDelay::readyTickerCallback()
+{
+    this->isRunning = false;
+}

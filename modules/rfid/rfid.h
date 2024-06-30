@@ -18,6 +18,11 @@
 
 //=====[Declaration of public data types]======================================
 
+typedef enum{
+    LEYENDO,
+    ESPERANDO
+} RFID_status_t;
+
 //=====[Declaration of public classes]=========================================
 
 class RFID
@@ -26,8 +31,11 @@ class RFID
         // Crea el objeto y lo inicializa
         RFID(PinName pin_mosi, PinName pin_miso, PinName pin_sclk, PinName pin_cs, PinName pin_reset, PinName pin_led);
 
-        //Busca si hay una tarjeta y la lee
+        // Busca si hay una tarjeta y la lee
         char * read();
+
+        //
+        RFID_status_t get_status();
 
     private:
         // Módulo lector de rfid
@@ -37,9 +45,18 @@ class RFID
         char id[20];
 
         // Led de lectura
-        Led led;
+        Led led_lectura;
 
         nonBlockingDelay read_delay;
+
+        //
+        RFID_status_t RFID_status;
+
+        //
+        void set_status(RFID_status_t new_status);
+
+        //
+        void read_delay_callback();
 
 };
 

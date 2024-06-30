@@ -25,24 +25,24 @@ class Tranquera
 {
     public:
         // Crea la tranquera y la inicializa cerrada
-        Tranquera(PinName pin);
+        Tranquera(PinName pin_tranquera, PinName pin_boton_abrir, PinMode mode_boton_abrir, PinName pin_boton_cerrar, PinMode mode_boton_cerrar);
 
         // Crea la tranquera y le indica el valor de inicio (ON=abierto / OFF=cerrado)
-        Tranquera(PinName pin, int value);
+        Tranquera(PinName pin_tranquera, int value, PinName pin_boton_abrir, PinMode mode_boton_abrir, PinName pin_boton_cerrar, PinMode mode_boton_cerrar);
 
-        // Pide el cambio de posición a CERRADO o ABIERTO
-        void write(position_t new_position);
+        // 
+        void update_position(position_t new_position);
 
         // Lee el valor de la tranquera
-        int read();
+        position_t read();
 
         // Realiza el cambio de posición de la tranquera
-        void update();
+        //void update();
 
         // Sobrecarga del operador = para escribir
         Tranquera &operator= (position_t new_position)
         {
-            write(new_position);
+            update_position(new_position);
             return *this;
         }
 
@@ -56,8 +56,15 @@ class Tranquera
         // leds de salida
         Led output;
 
+        //
+        InterruptIn int_boton_abrir;
+        InterruptIn int_boton_cerrar;
+
         // Actualiza la posición de la tranquera
-        void update_position();
+        //void update_position();
+
+        void int_boton_abrir_callback();
+        void int_boton_cerrar_callback();
 
 };
 

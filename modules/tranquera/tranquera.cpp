@@ -24,42 +24,30 @@ position_t position;
 
 //=====[Implementations of public methods]=====================================
 
-Tranquera::Tranquera(PinName pin): output(pin)
+Tranquera::Tranquera(PinName pin_tranquera, PinName pin_boton_abrir, PinMode mode_boton_abrir, PinName pin_boton_cerrar, PinMode mode_boton_cerrar): 
+                output(pin_tranquera), int_boton_abrir(pin_boton_abrir, mode_boton_abrir), int_boton_cerrar(pin_boton_cerrar, mode_boton_cerrar)
 {
     // Se inicializa en CERRADO
-    position = CERRADO;
+    Tranquera::update_position(CERRADO);
+
+    int_boton_abrir.rise(callback(this, &Tranquera::int_boton_abrir_callback));
+    int_boton_cerrar.rise(callback(this, &Tranquera::int_boton_cerrar_callback));
 }
 
-Tranquera::Tranquera(PinName pin, int value): output(pin, value)
+Tranquera::Tranquera(PinName pin_tranquera, int value, PinName pin_boton_abrir, PinMode mode_boton_abrir, PinName pin_boton_cerrar, PinMode mode_boton_cerrar):
+                output(pin_tranquera, value), int_boton_abrir(pin_boton_abrir, mode_boton_abrir), int_boton_cerrar(pin_boton_cerrar, mode_boton_cerrar)
 {
     if(value == OFF){
-        position = CERRADO;
+        Tranquera::update_position(CERRADO);
     }
     else{
-        position = ABIERTO;
+        Tranquera::update_position(ABIERTO);
     }
 }
 
-void Tranquera::write(position_t new_position)
+void Tranquera::update_position(position_t new_position)
 {
     position = new_position;
-}
-
-
-int Tranquera::read()
-{
-    return position;
-}
-
-void Tranquera::update()
-{
-    update_position();
-}
-
-//=====[Implementations of private methods]====================================
-
-void Tranquera::update_position()
-{
     switch (position){
         case ABIERTO:
             output = ON;
@@ -70,4 +58,22 @@ void Tranquera::update_position()
         default:
             break;
     }
+}
+
+
+position_t Tranquera::read()
+{
+    return position;
+}
+
+//=====[Implementations of private methods]====================================
+
+void Tranquera::int_boton_abrir_callback()
+{
+    Tranquera::update_position(ABIERTO);
+}
+
+void Tranquera::int_boton_cerrar_callback()
+{
+    Tranquera::update_position(CERRADO);
 }

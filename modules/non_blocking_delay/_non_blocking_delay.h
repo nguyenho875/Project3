@@ -1,7 +1,7 @@
-//=====[#include guards - begin]===============================================
+/*//=====[#include guards - begin]===============================================
 
-#ifndef _NON_BLOCKING_DELAY_H_
-#define _NON_BLOCKING_DELAY_H_
+#ifndef __NON_BLOCKING_DELAY_H_
+#define __NON_BLOCKING_DELAY_H_
 
 //==================[Libraries]===============================================
 
@@ -18,32 +18,21 @@ typedef uint64_t tick_t;
 class nonBlockingDelay {
     public:
         nonBlockingDelay(tick_t durationValue);
-        nonBlockingDelay(tick_t durationValue, Callback<void()> cb);
         void Start();
         void Start(tick_t new_duration);
-        void Start(tick_t new_duration, Callback<void()> cb);
-        void Start(Callback<void()> cb);
-        bool isReady();
-        void SetDuration(tick_t durationValue);
-        void SetCallback(Callback<void()> cb);
+        bool Read();
+        void Write(tick_t durationValue);
     private:
         tick_t startTime;
         tick_t duration;
         bool isRunning;
-        Callback<void()> my_callback;
-        //Ticker globalTicker;
-        Ticker ticker;
-        Ticker ready_ticker;
-        //tick_t tickCounter;
 
-        //void globalTickerCallback();
-        void tickerCallback();
-        void readyTickerCallback();
-        
 };
 
 //=====[Declarations (prototypes) of public functions]=========================
 
+void tickInit();
+
 //=====[#include guards - end]=================================================
 
-#endif // _NON_BLOCKING_DELAY_H_
+#endif // __NON_BLOCKING_DELAY_H_*/
