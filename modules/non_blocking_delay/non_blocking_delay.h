@@ -31,12 +31,9 @@ class nonBlockingDelay {
         tick_t duration;
         bool isRunning;
         Callback<void()> my_callback;
-        //Ticker globalTicker;
         Ticker ticker;
         Ticker ready_ticker;
-        //tick_t tickCounter;
 
-        //void globalTickerCallback();
         void tickerCallback();
         void readyTickerCallback();
         

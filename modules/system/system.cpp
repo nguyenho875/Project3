@@ -18,6 +18,12 @@
 
 //=====[Declaration of private data types]=====================================
 
+//=====[Declarations (prototypes) of private functions]========================
+
+void parse_message_received(const char * topic, const char * message);
+//static void int_scale_callback_on();
+//static void int_scale_callback_off();
+
 //=====[Declaration and initialization of public global objects]===============
 
 // ---Módulos---
@@ -31,6 +37,7 @@ static RFID rfid_reader(PIN_RFID_MOSI, PIN_RFID_MISO, PIN_RFID_SCLK, PIN_RFID_CS
 //static Button boton_cerrar(PIN_BOTON_CERRAR, MODE_PIN_BOTON_CERRAR);
 static MQTT mqtt(PIN_MQTT_TX, PIN_MQTT_RX, MQTT_BAUDRATE, PIN_MQTT_STATUS, PIN_LED_WIFI_SIN_CONEXION, PIN_LED_WIFI_CONECTADO, PIN_LED_MENSAJE_MQTT);
 // ---
+static Led led(D4, OFF);
 
 // ---Delay---
 nonBlockingDelay system_delay(SYSTEM_TIME_INCREMENT_MS);
@@ -48,17 +55,16 @@ nonBlockingDelay system_delay(SYSTEM_TIME_INCREMENT_MS);
 //=====[Declaration and initialization of private global variables]============
 
 char * lectura_rfid = nullptr;
-
-//=====[Declarations (prototypes) of private functions]========================
-
-//static void int_scale_callback_on();
-//static void int_scale_callback_off();
+char * topic_received = nullptr;
+char * message_received = nullptr;
 
 //=====[Implementations of public functions]===================================
 
 void system_init()
 {
     system_delay.Start();
+
+    mqtt.subscribe("Tranquera");    //PEDIR RESPUESTA DE SUSCRIPCIÓN
 
     /*
     int_scale.fall(&int_scale_callback_on);
@@ -71,6 +77,11 @@ void system_update()
     if(system_delay.isReady()){
         system_delay.Start();
 
+        if(mqtt.unread_message){
+            //mqtt.receive(topic_received, message_received);
+            parse_message_received(topic_received, message_received);
+        }
+
         lectura_rfid = rfid_reader.read();
         if(lectura_rfid != nullptr){
             mqtt.publish("ProyectoTranquera/LecturaRFID", lectura_rfid);
@@ -80,6 +91,12 @@ void system_update()
 }
 
 //=====[Implementations of private functions]==================================
+
+void parse_message_received(const char * topic, const char * message)
+{
+    led = !led;
+    mqtt.read_ok();
+}
 
 /*
 static void int_scale_callback_on()
