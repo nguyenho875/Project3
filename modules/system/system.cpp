@@ -37,10 +37,10 @@ static RFID rfid_reader(PIN_RFID_MOSI, PIN_RFID_MISO, PIN_RFID_SCLK, PIN_RFID_CS
 //static Button boton_cerrar(PIN_BOTON_CERRAR, MODE_PIN_BOTON_CERRAR);
 static MQTT mqtt(PIN_MQTT_TX, PIN_MQTT_RX, MQTT_BAUDRATE, PIN_MQTT_STATUS, PIN_LED_WIFI_SIN_CONEXION, PIN_LED_WIFI_CONECTADO, PIN_LED_MENSAJE_MQTT);
 // ---
-static Led led(D4, OFF);
 
 // ---Delay---
-nonBlockingDelay system_delay(SYSTEM_TIME_INCREMENT_MS);
+nonBlockingDelay MQTT_update_delay(MQTT_UPDATE_DELAY_TIME_MS);
+nonBlockingDelay RFID_read_delay(RFID_READ_DELAY_TIME_MS);
 // ---
 
 
@@ -55,17 +55,17 @@ nonBlockingDelay system_delay(SYSTEM_TIME_INCREMENT_MS);
 //=====[Declaration and initialization of private global variables]============
 
 char * lectura_rfid = nullptr;
-char * topic_received = nullptr;
-char * message_received = nullptr;
+char topic_received[256] = "";
+char message_received[256] = "";
 
 //=====[Implementations of public functions]===================================
 
 void system_init()
 {
-    system_delay.Start();
+    MQTT_update_delay.Start();
+    RFID_read_delay.Start();
 
-    mqtt.subscribe("Tranquera");    //PEDIR RESPUESTA DE SUSCRIPCIÓN
-
+    mqtt.subscribe(TOPIC_STATE_TRANQUERA);
     /*
     int_scale.fall(&int_scale_callback_on);
     int_scale.rise(&int_scale_callback_off);
@@ -74,13 +74,8 @@ void system_init()
 
 void system_update()
 {
-    if(system_delay.isReady()){
-        system_delay.Start();
-
-        if(mqtt.unread_message){
-            //mqtt.receive(topic_received, message_received);
-            parse_message_received(topic_received, message_received);
-        }
+    if(RFID_read_delay.isReady()){
+        RFID_read_delay.Start();
 
         lectura_rfid = rfid_reader.read();
         if(lectura_rfid != nullptr){
@@ -88,14 +83,39 @@ void system_update()
             pc.string_write(lectura_rfid);
         }
     }
+
+    if(MQTT_update_delay.isReady()){
+        MQTT_update_delay.Start();
+
+        mqtt.processPendings();
+    }
+
+    if(mqtt.unread_message){
+        mqtt.receive(topic_received, message_received);
+        parse_message_received(topic_received, message_received);
+    }
 }
 
 //=====[Implementations of private functions]==================================
 
 void parse_message_received(const char * topic, const char * message)
 {
-    led = !led;
     mqtt.read_ok();
+
+    if (strcmp(topic, "subscribed") == 0) {
+        mqtt.confirmSubscription(message);
+    }
+    else if (strcmp(topic, "unsubscribed") == 0) {
+        mqtt.confirmUnsubscription(message);
+    }
+    else if (strcmp(topic, TOPIC_STATE_TRANQUERA) == 0) {
+        if(strcmp(message, MESSAGE_ABRIR_TRANQUERA) == 0){
+            tranquera = ABIERTO;
+        }
+        else if(strcmp(message, MESSAGE_CERRAR_TRANQUERA) == 0){
+            tranquera = CERRADO;
+        }
+    }
 }
 
 /*
