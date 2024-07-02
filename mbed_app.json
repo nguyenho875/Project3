@@ -2,7 +2,9 @@
     "target_overrides": {
         "*": {
             "platform.stdio-convert-newlines": 1,
-            "target.printf_lib": "std"
+            "target.printf_lib": "std",
+            "drivers.uart-serial-rxbuf-size": 1024,
+            "drivers.uart-serial-txbuf-size": 256
         }
     }
 }

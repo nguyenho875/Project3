@@ -24,33 +24,29 @@ class Scale
 {
     public:
         // Crea la balanza
-        Scale(PinName pin_scale);
+        Scale(PinName pin_scale, PinName pin_enable_switch, PinMode mode_enable_switch);
 
         // Lee el valor de la balanza, entre 0 y 500 kg. -1 si la balanza está apagada
-        float read();
+        bool read(char * value);
 
         // Lee el valor del estado de la balanza
         state_t read_state();
 
-        // Pide el cambio de estado a ENCENDIDO o APAGADO
-        void write_state(state_t new_state);
-
-        // Sobrecarga de float() para leer
-        operator float()
-        {
-            return read();
-        }
-
-        // Sobrecarga del operador = para escribir
-        Scale &operator= (state_t new_state)
-        {
-            write_state(new_state);
-            return *this;
-        }
-
     private:
         // Entrada analógica
         AnalogIn AI;
+
+        //
+        DigitalIn enable_switch;
+
+        //
+        InterruptIn int_enable_switch;
+
+        //
+        void update_state(state_t new_state);
+
+        void int_enable_switch_callback_on();
+        void int_enable_switch_callback_off();
 
 };
 

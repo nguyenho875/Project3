@@ -14,7 +14,9 @@
 
 //=====[Declaration of public defines]=========================================
 
-#define READ_DELAY_TIME_MS 3000
+#ifndef RFID_READ_DELAY_TIME_MS
+#define RFID_READ_DELAY_TIME_MS 3000
+#endif
 
 //=====[Declaration of public data types]======================================
 

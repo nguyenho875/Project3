@@ -36,9 +36,6 @@ class Tranquera
         // Lee el valor de la tranquera
         position_t read();
 
-        // Realiza el cambio de posición de la tranquera
-        //void update();
-
         // Sobrecarga del operador = para escribir
         Tranquera &operator= (position_t new_position)
         {
@@ -59,9 +56,6 @@ class Tranquera
         //
         InterruptIn int_boton_abrir;
         InterruptIn int_boton_cerrar;
-
-        // Actualiza la posición de la tranquera
-        //void update_position();
 
         void int_boton_abrir_callback();
         void int_boton_cerrar_callback();

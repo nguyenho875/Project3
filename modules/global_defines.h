@@ -5,12 +5,16 @@
 
 //=====[Declaration of public defines]=========================================
 
-// Placas
+//---Lista de Placas---
 #define NUCLEO_F429ZI 0
+//---
 
 // Placa usada
 #define PLACA NUCLEO_F429ZI
 
+//---Defines para cada placa---
+
+//---Defines para NUCLEO_F429ZI---
 #if PLACA == NUCLEO_F429ZI
 
 #define PC_BAUDRATE 115200
@@ -48,10 +52,26 @@
 #define MQTT_BAUDRATE 115200
 
 #endif //PLACA
+//---
 
-//=====[Declaration of public data types]======================================
+//---Defines de Módulos---
+//MQTT.h:
+#define MQTT_MESSAGE_RECEIVED_LED_DELAY_TIME_MS 1000
 
-//=====[Declarations (prototypes) of public functions]=========================
+//rfid.h:
+#define RFID_READ_DELAY_TIME_MS 3000
+//---
+
+//---Defines del sistema---
+//Delays:
+#define MQTT_UPDATE_DELAY_TIME_MS   1000
+#define RFID_READ_TRY_DELAY_TIME_MS     250
+//MQTT Topics:
+#define TOPIC_STATE_TRANQUERA "ProyectoTranquera/Tranquera"
+//MQTT Messages:
+#define MESSAGE_ABRIR_TRANQUERA "1"
+#define MESSAGE_CERRAR_TRANQUERA "0"
+//---
 
 //=====[#include guards - end]=================================================
 

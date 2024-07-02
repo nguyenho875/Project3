@@ -23,7 +23,7 @@
 //=====[Implementations of public methods]=====================================
 
 RFID::RFID(PinName pin_mosi, PinName pin_miso, PinName pin_sclk, PinName pin_cs, PinName pin_reset, PinName pin_led): 
-        reader(pin_mosi, pin_miso, pin_sclk, pin_cs, pin_reset), led_lectura(pin_led, OFF), read_delay(READ_DELAY_TIME_MS, callback(this, &RFID::read_delay_callback))
+        reader(pin_mosi, pin_miso, pin_sclk, pin_cs, pin_reset), led_lectura(pin_led, OFF), read_delay(RFID_READ_DELAY_TIME_MS, callback(this, &RFID::read_delay_callback))
 {
     this->reader.PCD_Init();
     RFID::set_status(ESPERANDO);
