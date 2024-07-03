@@ -36,6 +36,9 @@ class Tranquera
         // Lee el valor de la tranquera
         position_t read();
 
+        //
+        bool position_changed;
+
         // Sobrecarga del operador = para escribir
         Tranquera &operator= (position_t new_position)
         {
@@ -43,8 +46,8 @@ class Tranquera
             return *this;
         }
 
-        // Sobrecarga de int() para leer
-        operator int()
+        // Sobrecarga de position_t() para leer
+        operator position_t()
         {
             return read();
         }

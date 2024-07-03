@@ -43,6 +43,9 @@ Tranquera::Tranquera(PinName pin_tranquera, int value, PinName pin_boton_abrir, 
     else{
         Tranquera::update_position(ABIERTO);
     }
+
+    int_boton_abrir.rise(callback(this, &Tranquera::int_boton_abrir_callback));
+    int_boton_cerrar.rise(callback(this, &Tranquera::int_boton_cerrar_callback));
 }
 
 void Tranquera::update_position(position_t new_position)
@@ -58,6 +61,8 @@ void Tranquera::update_position(position_t new_position)
         default:
             break;
     }
+
+    this->position_changed = true;
 }
 
 

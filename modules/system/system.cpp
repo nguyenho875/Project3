@@ -23,6 +23,9 @@
 //=====[Declarations (prototypes) of private functions]========================
 
 void parse_message_received(const char * topic, const char * message);
+void send_tranquera_position();
+void int_system_mode_idle_callback();
+void int_system_mode_solo_lectura_callback();
 
 //=====[Declaration and initialization of public global objects]===============
 
@@ -36,10 +39,15 @@ static RFID rfid_reader(PIN_RFID_MOSI, PIN_RFID_MISO, PIN_RFID_SCLK, PIN_RFID_CS
 static MQTT mqtt(PIN_MQTT_TX, PIN_MQTT_RX, MQTT_BAUDRATE, PIN_MQTT_STATUS, PIN_LED_WIFI_CONECTADO, PIN_LED_WIFI_SIN_CONEXION, PIN_LED_MENSAJE_MQTT);
 // ---
 
-// ---Delay---
-nonBlockingDelay MQTT_update_delay(MQTT_UPDATE_DELAY_TIME_MS);
-nonBlockingDelay RFID_read_delay(RFID_READ_TRY_DELAY_TIME_MS);
+// ---Delays---
+static nonBlockingDelay RFID_read_delay(RFID_READ_TRY_DELAY_TIME_MS);
 // ---
+
+//---Interrupciones---
+InterruptIn int_system_mode_selector(PIN_SWITCH_SOLO_LECTURA, MODE_PIN_SWITCH_SOLO_LECTURA);
+//---
+
+DigitalIn system_mode_selector_in(PIN_SWITCH_SOLO_LECTURA, MODE_PIN_SWITCH_SOLO_LECTURA);
 
 //=====[Declaration of external public global variables]=======================
 
@@ -53,14 +61,25 @@ char msg [256] = "";
 char topic_received[256] = "";
 char message_received[256] = "";
 
+static system_mode_t system_mode;
+
 //=====[Implementations of public functions]===================================
 
 void system_init()
 {
-    MQTT_update_delay.Start();
     RFID_read_delay.Start();
 
-    mqtt.subscribe(TOPIC_STATE_TRANQUERA);
+    if(system_mode_selector_in == HIGH){
+        system_mode = SOLO_LECTURA;
+    }
+    else{
+        system_mode = IDLE;
+    }
+
+    int_system_mode_selector.fall(&int_system_mode_idle_callback);
+    int_system_mode_selector.rise(&int_system_mode_solo_lectura_callback);
+
+    mqtt.subscribe(TOPIC_TRANQUERA);
 }
 
 void system_update()
@@ -74,7 +93,7 @@ void system_update()
             strcpy(msg, lectura_rfid);
             strcat(msg, ":");
             strcat(msg, lectura_scale);
-            mqtt.publish("ProyectoTranquera/LecturaRFID", msg);
+            mqtt.publish(TOPIC_RFID_LECTURA, msg);
             pc.string_write("\nRFID: ");
             pc.string_write(lectura_rfid);
             pc.string_write("\n");
@@ -83,13 +102,14 @@ void system_update()
             pc.string_write("\n");
         }
 
+        if(tranquera.position_changed){
+            send_tranquera_position();
+            tranquera.position_changed = false;
+        }
+
     }
 
-    if(MQTT_update_delay.isReady()){
-        MQTT_update_delay.Start();
-
-        mqtt.processPendings();
-    }
+    mqtt.processPendings();
 
     if(mqtt.receive(topic_received, message_received)){
         parse_message_received(topic_received, message_received);
@@ -106,12 +126,43 @@ void parse_message_received(const char * topic, const char * message)
     else if (strcmp(topic, "unsubscribed") == 0) {
         mqtt.confirmUnsubscription(message);
     }
-    else if (strcmp(topic, TOPIC_STATE_TRANQUERA) == 0) {
-        if(strcmp(message, MESSAGE_ABRIR_TRANQUERA) == 0){
+
+    else if (strcmp(topic, TOPIC_TRANQUERA) == 0) {
+        if(strcmp(message, MESSAGE_TRANQUERA_ABRIR) == 0 && system_mode == IDLE){
             tranquera = ABIERTO;
         }
-        else if(strcmp(message, MESSAGE_CERRAR_TRANQUERA) == 0){
+        else if(strcmp(message, MESSAGE_TRANQUERA_CERRAR) == 0 && system_mode == IDLE){
             tranquera = CERRADO;
         }
+        else if(strcmp(message, MESSAGE_TRANQUERA_PEDIR_ESTADO) == 0){
+            send_tranquera_position();
+        }
     }
+}
+
+void send_tranquera_position()
+{
+    
+    position_t position = tranquera;
+    switch (position){
+        case ABIERTO:
+            mqtt.publish(TOPIC_TRANQUERA_ESTADO, MESSAGE_TRANQUERA_ABRIR);
+            break;
+        case CERRADO:
+            mqtt.publish(TOPIC_TRANQUERA_ESTADO, MESSAGE_TRANQUERA_CERRAR);
+            break;
+        default:
+            break;
+    }
+    
+}
+
+void int_system_mode_idle_callback()
+{
+    system_mode = IDLE;
+}
+
+void int_system_mode_solo_lectura_callback()
+{
+    system_mode = SOLO_LECTURA;
 }

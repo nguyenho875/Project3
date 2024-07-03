@@ -64,13 +64,15 @@
 
 //---Defines del sistema---
 //Delays:
-#define MQTT_UPDATE_DELAY_TIME_MS   1000
 #define RFID_READ_TRY_DELAY_TIME_MS     250
 //MQTT Topics:
-#define TOPIC_STATE_TRANQUERA "ProyectoTranquera/Tranquera"
+#define TOPIC_TRANQUERA "ProyectoTranquera/Tranquera"
+#define TOPIC_TRANQUERA_ESTADO "ProyectoTranquera/Tranquera/Estado"
+#define TOPIC_RFID_LECTURA "ProyectoTranquera/RFID/Lectura"
 //MQTT Messages:
-#define MESSAGE_ABRIR_TRANQUERA "1"
-#define MESSAGE_CERRAR_TRANQUERA "0"
+#define MESSAGE_TRANQUERA_ABRIR "1"
+#define MESSAGE_TRANQUERA_CERRAR "0"
+#define MESSAGE_TRANQUERA_PEDIR_ESTADO "PedirEstado"
 //---
 
 //=====[#include guards - end]=================================================
