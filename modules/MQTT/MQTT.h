@@ -95,6 +95,8 @@ class MQTT
         std::vector<std::string> pendingUnsubscriptions;
         std::vector<PendingMessage_t> pendingMessages;
 
+        bool reset_subscriptions = false;
+
         // Actualiza el status de la conexión
         void update_status(MQTT_status_t new_status);
 

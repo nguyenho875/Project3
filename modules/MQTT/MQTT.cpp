@@ -104,6 +104,15 @@ std::vector<std::string> MQTT::getSubscribedTopics() {
 }
 
 void MQTT::processPendings() {
+    if(this->reset_subscriptions){
+        // Move all subscribed topics to pending subscriptions
+        for (const std::string& topic : subscribedTopics) {
+            pendingSubscriptions.push_back(topic);
+        }
+        subscribedTopics.clear();
+        this->reset_subscriptions = false;
+    }
+
     // Enviar mensajes de suscripción pendientes
     for (const std::string& topic : pendingSubscriptions) {
         MQTT::write(subscribe_str, topic.c_str());
@@ -178,12 +187,7 @@ void MQTT::int_MQTT_status_callback_on()
 void MQTT::int_MQTT_status_callback_off()
 {
     MQTT::update_status(DESCONECTADO);
-
-    // Move all subscribed topics to pending subscriptions
-    for (const std::string& topic : subscribedTopics) {
-        pendingSubscriptions.push_back(topic);
-    }
-    subscribedTopics.clear();
+    this-> reset_subscriptions = true;    
 }
 
 void MQTT::int_MQTT_mensaje_callback()
