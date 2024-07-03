@@ -66,13 +66,22 @@
 //Delays:
 #define RFID_READ_TRY_DELAY_TIME_MS     250
 //MQTT Topics:
+    //Para Suscribirme
 #define TOPIC_TRANQUERA "ProyectoTranquera/Tranquera"
+#define TOPIC_SYSTEM_MODE "ProyectoTranquera/Sistema"
+    //Para Enviar
 #define TOPIC_TRANQUERA_ESTADO "ProyectoTranquera/Tranquera/Estado"
 #define TOPIC_RFID_LECTURA "ProyectoTranquera/RFID/Lectura"
+#define TOPIC_SYSTEM_MODE_ESTADO "ProyectoTranquera/Sistema/Estado"
 //MQTT Messages:
 #define MESSAGE_TRANQUERA_ABRIR "1"
+#define MESSAGE_TRANQUERA_ABIERTO "1"
 #define MESSAGE_TRANQUERA_CERRAR "0"
+#define MESSAGE_TRANQUERA_CERRADO "0"
 #define MESSAGE_TRANQUERA_PEDIR_ESTADO "PedirEstado"
+#define MESSAGE_SYSTEM_MODE "PedirEstado"
+#define MESSAGE_SYSTEM_MODE_IDLE "Idle"
+#define MESSAGE_SYSTEM_MODE_SOLO_LECTURA "SoloLectura"
 //---
 
 //=====[#include guards - end]=================================================

@@ -11,6 +11,7 @@
 #include "scale.h"
 #include "MQTT.h"
 #include "rfid.h"
+#include "mode_selector.h"
 
 
 #include "serial_com.h"
@@ -24,8 +25,7 @@
 
 void parse_message_received(const char * topic, const char * message);
 void send_tranquera_position();
-void int_system_mode_idle_callback();
-void int_system_mode_solo_lectura_callback();
+void send_system_mode();
 
 //=====[Declaration and initialization of public global objects]===============
 
@@ -37,17 +37,12 @@ static Tranquera tranquera(PIN_TRANQUERA, PIN_BOTON_ABRIR, MODE_PIN_BOTON_ABRIR,
 static Scale scale(PIN_BALANZA, PIN_SWITCH_BALANZA, MODE_PIN_SWITCH_BALANZA);
 static RFID rfid_reader(PIN_RFID_MOSI, PIN_RFID_MISO, PIN_RFID_SCLK, PIN_RFID_CS, PIN_RFID_RESET, PIN_LED_LECTURA);
 static MQTT mqtt(PIN_MQTT_TX, PIN_MQTT_RX, MQTT_BAUDRATE, PIN_MQTT_STATUS, PIN_LED_WIFI_CONECTADO, PIN_LED_WIFI_SIN_CONEXION, PIN_LED_MENSAJE_MQTT);
+static ModeSelector system_mode(PIN_SWITCH_SOLO_LECTURA, MODE_PIN_SWITCH_SOLO_LECTURA, PIN_LED_MODO_NORMAL, PIN_LED_MODO_SOLO_LECTURA);
 // ---
 
 // ---Delays---
 static nonBlockingDelay RFID_read_delay(RFID_READ_TRY_DELAY_TIME_MS);
 // ---
-
-//---Interrupciones---
-InterruptIn int_system_mode_selector(PIN_SWITCH_SOLO_LECTURA, MODE_PIN_SWITCH_SOLO_LECTURA);
-//---
-
-DigitalIn system_mode_selector_in(PIN_SWITCH_SOLO_LECTURA, MODE_PIN_SWITCH_SOLO_LECTURA);
 
 //=====[Declaration of external public global variables]=======================
 
@@ -61,25 +56,14 @@ char msg [256] = "";
 char topic_received[256] = "";
 char message_received[256] = "";
 
-static system_mode_t system_mode;
-
 //=====[Implementations of public functions]===================================
 
 void system_init()
 {
     RFID_read_delay.Start();
 
-    if(system_mode_selector_in == HIGH){
-        system_mode = SOLO_LECTURA;
-    }
-    else{
-        system_mode = IDLE;
-    }
-
-    int_system_mode_selector.fall(&int_system_mode_idle_callback);
-    int_system_mode_selector.rise(&int_system_mode_solo_lectura_callback);
-
     mqtt.subscribe(TOPIC_TRANQUERA);
+    mqtt.subscribe(TOPIC_SYSTEM_MODE);
 }
 
 void system_update()
@@ -138,18 +122,23 @@ void parse_message_received(const char * topic, const char * message)
             send_tranquera_position();
         }
     }
+
+    else if (strcmp(topic, TOPIC_SYSTEM_MODE) == 0) {
+        if(strcmp(message, MESSAGE_SYSTEM_MODE) == 0){
+            send_system_mode();
+        }
+    }
 }
 
 void send_tranquera_position()
 {
-    
     position_t position = tranquera;
     switch (position){
         case ABIERTO:
-            mqtt.publish(TOPIC_TRANQUERA_ESTADO, MESSAGE_TRANQUERA_ABRIR);
+            mqtt.publish(TOPIC_TRANQUERA_ESTADO, MESSAGE_TRANQUERA_ABIERTO);
             break;
         case CERRADO:
-            mqtt.publish(TOPIC_TRANQUERA_ESTADO, MESSAGE_TRANQUERA_CERRAR);
+            mqtt.publish(TOPIC_TRANQUERA_ESTADO, MESSAGE_TRANQUERA_CERRADO);
             break;
         default:
             break;
@@ -157,12 +146,18 @@ void send_tranquera_position()
     
 }
 
-void int_system_mode_idle_callback()
+void send_system_mode()
 {
-    system_mode = IDLE;
-}
-
-void int_system_mode_solo_lectura_callback()
-{
-    system_mode = SOLO_LECTURA;
+    system_mode_t mode = system_mode;
+    switch (mode){
+        case IDLE:
+            mqtt.publish(TOPIC_SYSTEM_MODE_ESTADO, MESSAGE_SYSTEM_MODE_IDLE);
+            break;
+        case SOLO_LECTURA:
+            mqtt.publish(TOPIC_SYSTEM_MODE_ESTADO, MESSAGE_SYSTEM_MODE_SOLO_LECTURA);
+            break;
+        default:
+            break;
+    }
+    
 }
