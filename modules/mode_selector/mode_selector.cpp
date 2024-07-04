@@ -58,6 +58,8 @@ void ModeSelector::update_state(system_mode_t new_mode)
         default:
             break;
     }
+
+    this->mode_changed = true;
 }
 
 void ModeSelector::int_system_mode_idle_callback()

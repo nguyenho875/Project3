@@ -91,6 +91,11 @@ void system_update()
             tranquera.position_changed = false;
         }
 
+        if(system_mode.mode_changed){
+            send_system_mode();
+            system_mode.mode_changed = false;
+        }
+
     }
 
     mqtt.processPendings();

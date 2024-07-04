@@ -34,6 +34,8 @@ class ModeSelector
             return read_state();
         }
 
+        bool mode_changed = false;
+
     private:
         //
         Led led_idle;
