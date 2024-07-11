@@ -13,10 +13,6 @@
 #include "rfid.h"
 #include "mode_selector.h"
 
-
-#include "serial_com.h"
-#include "led.h"
-
 //=====[Declaration of private defines]========================================
 
 //=====[Declaration of private data types]=====================================
@@ -28,9 +24,6 @@ void send_tranquera_position();
 void send_system_mode();
 
 //=====[Declaration and initialization of public global objects]===============
-
-//PARA DEBUGGUEAR:
-static SerialCom pc(USBTX, USBRX, PC_BAUDRATE);
 
 // ---Módulos---
 static Tranquera tranquera(PIN_TRANQUERA, PIN_BOTON_ABRIR, MODE_PIN_BOTON_ABRIR, PIN_BOTON_CERRAR, MODE_PIN_BOTON_CERRAR);
@@ -78,12 +71,6 @@ void system_update()
             strcat(msg, ":");
             strcat(msg, lectura_scale);
             mqtt.publish(TOPIC_RFID_LECTURA, msg);
-            pc.string_write("\nRFID: ");
-            pc.string_write(lectura_rfid);
-            pc.string_write("\n");
-            pc.string_write("Peso: ");
-            pc.string_write(lectura_scale);
-            pc.string_write("\n");
         }
 
         if(tranquera.position_changed){
