@@ -1,10 +1,13 @@
 En este repositorio se encuentra el desarrollo de un proyecto para el control automático de tranqueras
 en mangas. Se incluye en este repositorio todo el firmware desarrollado, un esquemático del hardware
 usado, un archivo .apk para la instalación de una aplicación movil necesaria para el uso del sistema,
-un video demostrativo dle funcionamiento, y una memoria del desarrollo del trabajo.
+un video demostrativo del funcionamiento, y una memoria del desarrollo del trabajo.
 
 Realizado entre abril y julio de 2024 por Augusto Villacampa Horta como trabajo final del seminario
 de Sistemas Embebidos de la Facultad de Ingeniería de la Universidad de Buenos Aires.
+
+Link al video demostrativo del funcionamiento:
+https://www.youtube.com/watch?v=cxtm0vdYiug
 
 Consideraciones:
 
