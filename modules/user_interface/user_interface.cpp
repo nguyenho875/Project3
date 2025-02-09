@@ -134,50 +134,49 @@ static void userInterfaceDisplayInit()
     displayInit();
      
     displayCharPositionWrite ( 0,0 );
-    displayStringWrite( "Temperature:" );
+    displayStringWrite( "Tmp:" );
 
-    displayCharPositionWrite ( 0,1 );
+    displayCharPositionWrite ( 10,0 );
     displayStringWrite( "Gas:" );
     
-    displayCharPositionWrite ( 0,2 );
+    displayCharPositionWrite ( 0,1 );
     displayStringWrite( "Alarm:" );
 }
+
+
 
 static void userInterfaceDisplayUpdate()
 {
     static int accumulatedDisplayTime = 0;
     char temperatureString[3] = "";
     
-    if( accumulatedDisplayTime >=
-        DISPLAY_REFRESH_TIME_MS ) {
-
+    if( accumulatedDisplayTime >= DISPLAY_REFRESH_TIME_MS ) {
         accumulatedDisplayTime = 0;
 
+        // Temperature display (adjusted position)
         sprintf(temperatureString, "%.0f", temperatureSensorReadCelsius());
-        displayCharPositionWrite ( 12,0 );
+        displayCharPositionWrite ( 4,0 );         // Moved temperature value closer to "Tmp:"
         displayStringWrite( temperatureString );
-        displayCharPositionWrite ( 14,0 );
+        displayCharPositionWrite ( 6,0 );         // Moved °C symbol accordingly
         displayStringWrite( "'C" );
 
-        displayCharPositionWrite ( 4,1 );
-
+        // Gas detector status (adjusted position)
+        displayCharPositionWrite ( 14,0 );        // Moved gas status after "Gas:"
         if ( gasDetectorStateRead() ) {
-            displayStringWrite( "Detected    " );
+            displayStringWrite( "D" );
         } else {
-            displayStringWrite( "Not Detected" );
+            displayStringWrite( "ND" );
         }
 
-        displayCharPositionWrite ( 6,2 );
-        
+        // Alarm status (adjusted to second row)
+        displayCharPositionWrite ( 6,1 );         // Adjusted alarm status position
         if ( sirenStateRead() ) {
             displayStringWrite( "ON " );
         } else {
             displayStringWrite( "OFF" );
         }
-
     } else {
-        accumulatedDisplayTime =
-            accumulatedDisplayTime + SYSTEM_TIME_INCREMENT_MS;        
+        accumulatedDisplayTime = accumulatedDisplayTime + SYSTEM_TIME_INCREMENT_MS;        
     } 
 }
 
