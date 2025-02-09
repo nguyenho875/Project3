@@ -152,22 +152,7 @@ void displayCharPositionWrite( uint8_t charPositionX, uint8_t charPositionY )
                                 charPositionX ) );
             delay( 1 );         
         break;
-       
-        case 2:
-            displayCodeWrite( DISPLAY_RS_INSTRUCTION, 
-                              DISPLAY_IR_SET_DDRAM_ADDR |
-                              ( DISPLAY_20x4_LINE3_FIRST_CHARACTER_ADDRESS +
-                                charPositionX ) );
-            delay( 1 );         
-        break;
-
-        case 3:
-            displayCodeWrite( DISPLAY_RS_INSTRUCTION, 
-                              DISPLAY_IR_SET_DDRAM_ADDR |
-                              ( DISPLAY_20x4_LINE4_FIRST_CHARACTER_ADDRESS +
-                                charPositionX ) );
-            delay( 1 );         
-        break;
+    
     }
 }
 
