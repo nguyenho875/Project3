@@ -7,10 +7,10 @@
 
 //=====[Declaration of public data types]======================================
 typedef enum {
-    OFF,
-    LOW,
-    HIGH,
-    INT
+    OFF_MODE,
+    LOW_MODE,
+    HIGH_MODE,
+    INT_MODE
 } wiperMode_t;
 
 //=====[Declarations (prototypes) of public functions]=========================

@@ -40,7 +40,7 @@ void ignitionSubsystemInit()
 
 void ignitionSubsystemUpdate()
 {   
-    if (!engineON) {
+    if (!engineOn) {
         checkSeatsandSeatbelts();
         ignitionSubsytemTurnOn();
     }

@@ -16,8 +16,8 @@ AnalogIn wiperModeSelector(A1);
 //=====[Declaration of external public global variables]=======================
 
 //=====[Declaration and initialization of public global variables]=============
-wiperMode_t wiperMode = OFF;
-float potRead = 0.0;
+wiperMode_t wiperMode = OFF_MODE;
+float potWiperRead = 0.0;
 
 //=====[Declaration and initialization of private global variables]============
 
@@ -26,19 +26,19 @@ static float wiperModeSelectorRead();
 
 //=====[Implementations of public functions]===================================
 wiperMode_t wiperModeSelectorUpdate() {
-    potRead = wiperModeSelectorRead();
+    potWiperRead = wiperModeSelectorRead();
     
-    if (potRead <= 0.25) {
-        wiperMode = OFF;
+    if (potWiperRead <= 0.25) {
+        wiperMode = OFF_MODE;
     } 
-    else if (potRead > 0.25 && potRead <= 0.5) {
-        wiperMode = LOW;
+    else if (potWiperRead > 0.25 && potWiperRead <= 0.5) {
+        wiperMode = LOW_MODE;
     }
-    else if (potRead > 0.5 && potRead <= 0.75) {
-        wiperMode = HIGH;
+    else if (potWiperRead > 0.5 && potWiperRead <= 0.75) {
+        wiperMode = HIGH_MODE;
     }
     else {
-        wiperMode = INT;
+        wiperMode = INT_MODE;
     }
     return wiperMode;
 }

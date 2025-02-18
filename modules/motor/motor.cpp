@@ -19,7 +19,6 @@ PwmOut motor(PF_9);
 //=====[Declaration of external public global variables]=======================
 
 //=====[Declaration and initialization of private global variables]============
-wiperMode_t wiperMode;
 
 //=====[Declarations (prototypes) of private functions]========================
 
@@ -40,7 +39,7 @@ void motorRunHigh() {
     static float dutyStep = DUTY_STEP; 
     static bool motorOffRequested = false;
 
-    if (ignitionButtonReleasedEventUpdate() || wiperModeSelectorUpdate() == OFF) {
+    if (ignitionButtonReleasedEventUpdate() || wiperModeSelectorUpdate() == OFF_MODE) {
         motorOffRequested = true;
     }
 
@@ -74,7 +73,7 @@ void motorRunLow() {
     static float dutyStep = DUTY_STEP; 
     static bool motorOffRequested = false;
 
-    if (ignitionButtonReleasedEventUpdate() || wiperModeSelectorUpdate() == OFF) {
+    if (ignitionButtonReleasedEventUpdate() || wiperModeSelectorUpdate() == OFF_MODE) {
         motorOffRequested = true;
     }
 
@@ -110,7 +109,7 @@ void motorRunInt(int intTime) {
     static int turns = 0;
     static bool motorOffRequested = false;
 
-    if (ignitionButtonReleasedEventUpdate() || wiperModeSelectorUpdate() == OFF) {
+    if (ignitionButtonReleasedEventUpdate() || wiperModeSelectorUpdate() == OFF_MODE) {
         motorOffRequested = true;
     }
 

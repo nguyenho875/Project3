@@ -1,20 +1,61 @@
-//=====[#include guards - begin]===============================================
+//=====[Libraries]=============================================================
 
-#ifndef _INDICATOR_LEDS_H_
-#define _INDICATOR_LEDS_H_
+#include "mbed.h"
+#include "arm_book_lib.h"
 
-//=====[Declaration of public defines]=========================================
+#include "indicator_leds.h"
 
-//=====[Declaration of public data types]======================================
+//=====[Declaration of private defines]========================================
 
-//=====[Declarations (prototypes) of public functions]=========================
+//=====[Declaration of private data types]=====================================
 
-void indicatorLedsInit();    // initialize green and blue LEDs to off
-bool engineReadyLedStateRead();  // return state of engine ready (green) led 
-bool engineRunningLedStateRead();  // return state of engine running (blue) led 
-void engineReadyLedUpdate( bool state );   // turn on/off green led and update state
-void engineRunningLedUpdate( bool state ); // turn on/off blue led and update state
- 
-//=====[#include guards - end]=================================================
+//=====[Declaration and initialization of public global objects]===============
 
-#endif // _INDICATOR_LEDS_H_
+DigitalOut engineReadyLed(LED1);
+DigitalOut engineRunningLed(LED2);
+
+//=====[Declaration of external public global variables]=======================
+
+//=====[Declaration and initialization of public global variables]=============
+bool engineReadyLedState = OFF;
+bool engineRunningLedState = OFF;
+
+//=====[Declaration and initialization of private global variables]============
+
+
+//=====[Declarations (prototypes) of private functions]========================
+
+//=====[Implementations of public functions]===================================
+
+void indicatorLedsInit()
+{
+    engineReadyLed = OFF;
+    engineRunningLed = OFF;
+}
+
+bool engineReadyLedStateRead()
+{
+    return engineReadyLedState;
+}
+
+bool engineRunningLedStateRead()
+{
+    return engineRunningLedState;
+}
+
+void engineReadyLedUpdate( bool state )
+{
+    engineReadyLed = state;
+    engineReadyLedState = state;
+}
+
+void engineRunningLedUpdate( bool state )
+{
+    engineRunningLed = state;
+    engineRunningLedState = state;
+}
+
+
+
+//=====[Implementations of private functions]==================================
+
