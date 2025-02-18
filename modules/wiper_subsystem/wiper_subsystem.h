@@ -1,19 +1,16 @@
 //=====[#include guards - begin]===============================================
 
-#ifndef _SIREN_H_
-#define _SIREN_H_
+#ifndef _WIPER_SUBSYSTEM_H_
+#define _WIPER_SUBSYSTEM_H_
 
 //=====[Declaration of public defines]=========================================
 
 //=====[Declaration of public data types]======================================
 
 //=====[Declarations (prototypes) of public functions]=========================
-
-void sirenInit();
-bool sirenStateRead();
-void sirenStateWrite( bool state );
-void sirenUpdate( int strobeTime );
+void wiperSubsystemInit();
+void wiperSubsystemUpdate();
 
 //=====[#include guards - end]=================================================
 
-#endif // _SIREN_H_
+#endif // _WIPER_SUBSYSTEM_H_

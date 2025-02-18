@@ -1,21 +1,21 @@
 //=====[#include guards - begin]===============================================
 
-#ifndef _FIRE_ALARM_H_
-#define _FIRE_ALARM_H_
+#ifndef _WIPER_MODE_SELECTOR_H_
+#define _WIPER_MODE_SELECTOR_H_
 
 //=====[Declaration of public defines]=========================================
 
 //=====[Declaration of public data types]======================================
+typedef enum {
+    OFF,
+    LOW,
+    HIGH,
+    INT
+} wiperMode_t;
 
 //=====[Declarations (prototypes) of public functions]=========================
-
-void fireAlarmInit();
-void fireAlarmUpdate();
-bool gasDetectorStateRead();
-bool overTemperatureDetectorStateRead();
-bool gasDetectedRead();
-bool overTemperatureDetectedRead();
+wiperMode_t wiperModeSelectorUpdate(); // returns wiper mode selected by potentiometer
 
 //=====[#include guards - end]=================================================
 
-#endif // _FIRE_ALARM_H_
+#endif // _WIPER_MODE_SELECTOR_H_

@@ -1,8 +1,9 @@
 //=====[Libraries]=============================================================
 
 #include "mbed.h"
+#include "arm_book_lib.h"
 
-#include "date_and_time.h"
+#include "wiper_mode_selector.h"
 
 //=====[Declaration of private defines]========================================
 
@@ -10,39 +11,39 @@
 
 //=====[Declaration and initialization of public global objects]===============
 
+AnalogIn wiperModeSelector(A1);
+
 //=====[Declaration of external public global variables]=======================
 
 //=====[Declaration and initialization of public global variables]=============
+wiperMode_t wiperMode = OFF;
+float potRead = 0.0;
 
 //=====[Declaration and initialization of private global variables]============
 
 //=====[Declarations (prototypes) of private functions]========================
+static float wiperModeSelectorRead();
 
 //=====[Implementations of public functions]===================================
-
-char* dateAndTimeRead()
-{
-    time_t epochSeconds;
-    epochSeconds = time(NULL);
-    return ctime(&epochSeconds);    
-}
-
-void dateAndTimeWrite( int year, int month, int day, 
-                       int hour, int minute, int second )
-{
-    struct tm rtcTime;
-
-    rtcTime.tm_year = year - 1900;
-    rtcTime.tm_mon  = month - 1;
-    rtcTime.tm_mday = day;
-    rtcTime.tm_hour = hour;
-    rtcTime.tm_min  = minute;
-    rtcTime.tm_sec  = second;
-
-    rtcTime.tm_isdst = -1;
-
-    set_time( mktime( &rtcTime ) );
+wiperMode_t wiperModeSelectorUpdate() {
+    potRead = wiperModeSelectorRead();
+    
+    if (potRead <= 0.25) {
+        wiperMode = OFF;
+    } 
+    else if (potRead > 0.25 && potRead <= 0.5) {
+        wiperMode = LOW;
+    }
+    else if (potRead > 0.5 && potRead <= 0.75) {
+        wiperMode = HIGH;
+    }
+    else {
+        wiperMode = INT;
+    }
+    return wiperMode;
 }
 
 //=====[Implementations of private functions]==================================
-
+static float wiperModeSelectorRead() {
+    return wiperModeSelector.read();
+}

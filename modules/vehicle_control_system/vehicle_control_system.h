@@ -1,20 +1,18 @@
 //=====[#include guards - begin]===============================================
 
-#ifndef _TEMPERATURE_SENSOR_H_
-#define _TEMPERATURE_SENSOR_H_
+#ifndef _VEHICLE_CONTROL_SYSTEM_H_
+#define _VEHICLE_CONTROL_SYSTEM_H_
 
 //=====[Declaration of public defines]=========================================
+
+#define SYSTEM_TIME_INCREMENT_MS   1
 
 //=====[Declaration of public data types]======================================
 
 //=====[Declarations (prototypes) of public functions]=========================
-
-void temperatureSensorInit();
-void temperatureSensorUpdate();
-float temperatureSensorReadCelsius();
-float temperatureSensorReadFahrenheit();
-float celsiusToFahrenheit( float tempInCelsiusDegrees );
+void vehicleControlSystemInit();
+void vehicleControlSystemUpdate();
 
 //=====[#include guards - end]=================================================
 
-#endif // _TEMPERATURE_SENSOR_H_
+#endif // _VEHICLE_CONTROL_SYSTEM_H_

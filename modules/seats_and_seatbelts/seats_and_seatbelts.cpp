@@ -3,16 +3,16 @@
 #include "mbed.h"
 #include "arm_book_lib.h"
 
-#include "strobe_light.h"
-#include "smart_home_system.h"
-
+#include "seats_and_seatbelts.h"
 //=====[Declaration of private defines]========================================
 
 //=====[Declaration of private data types]=====================================
 
 //=====[Declaration and initialization of public global objects]===============
-
-DigitalOut strobeLight(LED1);
+DigitalIn driverSeat(D10);
+DigitalIn passengerSeat(D11);
+DigitalIn driverSeatbelt(D12);
+DigitalIn passengerSeatbelt(D13);
 
 //=====[Declaration of external public global variables]=======================
 
@@ -20,41 +20,28 @@ DigitalOut strobeLight(LED1);
 
 //=====[Declaration and initialization of private global variables]============
 
-static bool strobeLightState = OFF;
-
 //=====[Declarations (prototypes) of private functions]========================
 
 //=====[Implementations of public functions]===================================
 
-void strobeLightInit()
-{
-    strobeLight = OFF;
+void seatsAndSeatbeltsInit() {  
+    driverSeat.mode(PullDown); 
+    passengerSeat.mode(PullDown); 
 }
 
-bool strobeLightStateRead()
-{
-    return strobeLightState;
+bool driverSeatOccupied() {
+    return driverSeat;
 }
 
-void strobeLightStateWrite( bool state )
-{
-    strobeLightState = state;
+bool passengerSeatOccupied() {
+    return passengerSeat;
 }
 
-void strobeLightUpdate( int strobeTime )
-{
-    static int accumulatedTimeAlarm = 0;
-    accumulatedTimeAlarm = accumulatedTimeAlarm + SYSTEM_TIME_INCREMENT_MS;
-    
-    if( strobeLightState ) {
-        if( accumulatedTimeAlarm >= strobeTime ) {
-            accumulatedTimeAlarm = 0;
-            strobeLight= !strobeLight;
-        }
-    } else {
-        strobeLight = OFF;
-    }
+bool driverSeatbeltFastened() {
+    return driverSeatbelt;
 }
 
-//=====[Implementations of private functions]==================================
-
+bool passengerSeatbeltFastened() {
+    return passengerSeatbelt;
+}
+//=====[Implementations of private functions]===================================
