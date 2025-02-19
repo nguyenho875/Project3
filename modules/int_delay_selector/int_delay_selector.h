@@ -8,8 +8,8 @@
 //=====[Declaration of public data types]======================================
 
 //=====[Declarations (prototypes) of public functions]=========================
-int intDelaySelectorUpdate();   // return int delay parameter for motorRunInt function
-int intDelaySelectorDisplay();  // return int delay time for lcd display
+int intDelaySelectorMotorUpdate();   // return int delay parameter for motorRunInt function
+int intDelaySelectorDisplayUpdate();  // return int delay time in seconds for lcd display
 
 //=====[#include guards - end]=================================================
 

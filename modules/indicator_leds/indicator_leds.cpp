@@ -22,7 +22,6 @@ bool engineRunningLedState = OFF;
 
 //=====[Declaration and initialization of private global variables]============
 
-
 //=====[Declarations (prototypes) of private functions]========================
 
 //=====[Implementations of public functions]===================================
@@ -31,16 +30,6 @@ void indicatorLedsInit()
 {
     engineReadyLed = OFF;
     engineRunningLed = OFF;
-}
-
-bool engineReadyLedStateRead()
-{
-    return engineReadyLedState;
-}
-
-bool engineRunningLedStateRead()
-{
-    return engineRunningLedState;
 }
 
 void engineReadyLedUpdate( bool state )
@@ -54,8 +43,6 @@ void engineRunningLedUpdate( bool state )
     engineRunningLed = state;
     engineRunningLedState = state;
 }
-
-
 
 //=====[Implementations of private functions]==================================
 

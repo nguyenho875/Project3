@@ -16,23 +16,15 @@
 //=====[Declaration of public data types]======================================
 
 //=====[Declarations (prototypes) of public functions]=========================
-void motorInit();       // initialize motor, set up at 0 degrees
-void motorOff();        // keep motor at 0 degrees
+void motorInit();       // initializes motor, set up at 0 degrees
 
-// runs motor at high speed, 
-// stops motor at 0 degrees when ignition button is pressed and released (shutdown requested)
-// or when mode selector is turned to OFF
-void motorRunHigh();   
+void motorOff();        // returns motor to 0 degrees
 
-// runs motor at low speed, 
-// stops motor at 0 degrees when ignition button is pressed and released (shutdown requested),
-// or when mode selector is turned to OFF
-void motorRunLow();
+void motorRunHigh();    // runs motor at high speed 
 
-// runs motor at low speed with intermittent delay is the parameter intTime, 
-// stops motor at 0 degrees when ignition button is pressed and released (shutdown requested)
-// or when mode selector is turned to OFF
-void motorRunInt(int intTime);
+void motorRunLow();   // runs motor at low speed
+
+void motorRunInt(int intTime);  // runs motor at low speed with intermittent delay is the parameter intTime
 
 //=====[#include guards - end]=================================================
 

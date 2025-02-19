@@ -10,7 +10,6 @@
 //=====[Declarations (prototypes) of public functions]=========================
 
 void alarmInit();       // initialize alarm
-bool alarmStateRead();  // return state of alarm 
 void alarmOn();         // turn on alarm
 void alarmOff();         // turn off alarm
 

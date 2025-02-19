@@ -70,7 +70,8 @@ static bool checkSeatsandSeatbelts() {
 
 static void ignitionSubsystemToggle() {
     static bool previousIgnitionButtonState = false;
-    static bool engineToggleRequested = false; // Tracks if we're waiting for the next button press to toggle engine state
+    static bool engineToggleRequested = false; 
+    // Tracks if we're waiting for the next button press to toggle engine state
 
     bool currentIgnitionButtonState = ignitionButtonRead();
 

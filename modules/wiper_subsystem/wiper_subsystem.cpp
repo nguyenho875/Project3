@@ -25,55 +25,59 @@
 //=====[Declaration and initialization of private global variables]============
 
 //=====[Declarations (prototypes) of private functions]========================
-static void userInterfaceDisplayInit();
+static void lcdDisplayInit();
 
 //=====[Implementations of public functions]===================================
 
 void wiperSubsystemInit()
 {
-    userInterfaceDisplayInit();
+    lcdDisplayInit();
     motorInit();  
 }
 
 void wiperSubsystemUpdate() 
 {
-    if (!engineStateUpdate() || wiperModeSelectorUpdate() == OFF_MODE) {
-        displayCharPositionWrite ( 12,0 );
-        displayStringWrite( "OFF " );
-        displayCharPositionWrite ( 11,1 );
-        displayStringWrite( "-    " );
-        // mechanism to turn off motor while running is already implemented in motorRun functions
+    //static bool motorStopping = false;
+    static int lastSpeedMode = LOW_MODE; // Store last mode before OFF
+
+    if (!engineStateUpdate() || wiperModeSelectorUpdate() == OFF_MODE) {  
+        motorOff();
+        displayCharPositionWrite(12, 0);
+        displayStringWrite("OFF ");
+        displayCharPositionWrite(11, 1);
+        displayStringWrite("-    ");
+        return;  
     }
-    else if (engineStateUpdate() && wiperModeSelectorUpdate() == LOW_MODE) {
+    else if (wiperModeSelectorUpdate() == LOW_MODE) {
         motorRunLow();
-        displayCharPositionWrite ( 12,0 );
-        displayStringWrite( "LOW " );
-        displayCharPositionWrite ( 11,1 );
-        displayStringWrite( "-    " );
+        displayCharPositionWrite(12, 0);
+        displayStringWrite("LOW ");
+        displayCharPositionWrite(11, 1);
+        displayStringWrite("-    ");
     }
-    else if (engineStateUpdate() && wiperModeSelectorUpdate() == HIGH_MODE) {
+    else if (wiperModeSelectorUpdate() == HIGH_MODE) {
         motorRunHigh();
-        displayCharPositionWrite ( 12,0 );
-        displayStringWrite( "HIGH" );
-        displayCharPositionWrite ( 11,1 );
-        displayStringWrite( "-    " );
+        displayCharPositionWrite(12, 0);
+        displayStringWrite("HIGH");
+        displayCharPositionWrite(11, 1);
+        displayStringWrite("-    ");
     }
-    else if (engineStateUpdate() && wiperModeSelectorUpdate() == INT_MODE) {
-        motorRunInt(intDelaySelectorUpdate());
-        displayCharPositionWrite ( 12,0 );
-        displayStringWrite( "INT " );
+    else if (wiperModeSelectorUpdate() == INT_MODE) {
+        motorRunInt(intDelaySelectorMotorUpdate());
+        displayCharPositionWrite(12, 0);
+        displayStringWrite("INT ");
 
         char intString[10];
-        sprintf(intString, "%d", intDelaySelectorDisplay());
-        displayCharPositionWrite ( 11,1 );
-        displayStringWrite( intString );
-        displayCharPositionWrite ( 12,1 );
-        displayStringWrite( "s" );
+        sprintf(intString, "%d", intDelaySelectorDisplayUpdate());
+        displayCharPositionWrite(11, 1);
+        displayStringWrite(intString);
+        displayCharPositionWrite(12, 1);
+        displayStringWrite("s");
     }
 }
 
 //=====[Implementations of private functions]==================================
-static void userInterfaceDisplayInit()
+static void lcdDisplayInit()
 {
     displayInit();
      
@@ -83,3 +87,4 @@ static void userInterfaceDisplayInit()
     displayCharPositionWrite ( 0,1 );
     displayStringWrite( "Int Delay: " );
 }
+
