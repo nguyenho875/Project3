@@ -115,7 +115,6 @@ static void ignitionSubsystemToggle() {
             engineToggleRequested = false; // Reset toggle request
         }
     }
-
     // Update previous button state
     previousIgnitionButtonState = currentIgnitionButtonState;
 }
