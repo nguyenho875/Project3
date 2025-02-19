@@ -1,61 +1,85 @@
 //=====[Libraries]=============================================================
 
-#include "mbed.h"
 #include "arm_book_lib.h"
 
+#include "wiper_subsystem.h"
+
+#include "display.h"
+#include "ignition_button.h"       // need ignitionButtonReleasedEventUpdate()
+#include "ignition_subsystem.h"    // need engineStateUpdate()
 #include "int_delay_selector.h"
+#include "motor.h"
+#include "vehicle_control_system.h"
+#include "wiper_mode_selector.h"
 
 //=====[Declaration of private defines]========================================
 
 //=====[Declaration of private data types]=====================================
 
 //=====[Declaration and initialization of public global objects]===============
-AnalogIn intDelaySelector(A2);
 
-//=====[Declaration of external public global variables]======================
+//=====[Declaration of external public global variables]=======================
 
 //=====[Declaration and initialization of public global variables]=============
-int intTime = 0;
-int timeDisplay = 0;
-float potIntRead = 0.0;
 
 //=====[Declaration and initialization of private global variables]============
 
 //=====[Declarations (prototypes) of private functions]========================
-static float intDelaySelectorRead();
+static void userInterfaceDisplayInit();
 
 //=====[Implementations of public functions]===================================
-int intDelaySelectorUpdate() {
-    float potIntRead = intDelaySelectorRead();
 
-    if (potIntRead < 0.1) {
-        intTime = 167;
-    } 
-    else if (potIntRead >= 0.1 && potIntRead <= 0.2) {
-        intTime = 333;
-    }
-    else{
-        intTime = 445;
-    }
-    return intTime;
+void wiperSubsystemInit()
+{
+    userInterfaceDisplayInit();
+    motorInit();  
 }
 
-int intDelaySelectorDisplay() {
-    float potIntRead = intDelaySelectorRead();
+void wiperSubsystemUpdate() 
+{
+    if (!engineStateUpdate() || wiperModeSelectorUpdate() == OFF_MODE) {
+        displayCharPositionWrite ( 12,0 );
+        displayStringWrite( "OFF " );
+        displayCharPositionWrite ( 11,1 );
+        displayStringWrite( "-    " );
+        // mechanism to turn off motor while running is already implemented in motorRun functions
+    }
+    else if (engineStateUpdate() && wiperModeSelectorUpdate() == LOW_MODE) {
+        motorRunLow();
+        displayCharPositionWrite ( 12,0 );
+        displayStringWrite( "LOW " );
+        displayCharPositionWrite ( 11,1 );
+        displayStringWrite( "-    " );
+    }
+    else if (engineStateUpdate() && wiperModeSelectorUpdate() == HIGH_MODE) {
+        motorRunHigh();
+        displayCharPositionWrite ( 12,0 );
+        displayStringWrite( "HIGH" );
+        displayCharPositionWrite ( 11,1 );
+        displayStringWrite( "-    " );
+    }
+    else if (engineStateUpdate() && wiperModeSelectorUpdate() == INT_MODE) {
+        motorRunInt(intDelaySelectorUpdate());
+        displayCharPositionWrite ( 12,0 );
+        displayStringWrite( "INT " );
 
-    if (potIntRead < 0.1) {
-        timeDisplay = 3;
-    } 
-    else if (potIntRead >= 0.1 && potIntRead <= 0.2) {
-        timeDisplay = 6;
+        char intString[10];
+        sprintf(intString, "%d", intDelaySelectorDisplay());
+        displayCharPositionWrite ( 11,1 );
+        displayStringWrite( intString );
+        displayCharPositionWrite ( 12,1 );
+        displayStringWrite( "s" );
     }
-    else{
-        timeDisplay = 8;
-    }
-    return timeDisplay;
 }
 
 //=====[Implementations of private functions]==================================
-static float intDelaySelectorRead() {
-    return intDelaySelector.read();
+static void userInterfaceDisplayInit()
+{
+    displayInit();
+     
+    displayCharPositionWrite ( 0,0 );
+    displayStringWrite( "Wiper mode: " );
+    
+    displayCharPositionWrite ( 0,1 );
+    displayStringWrite( "Int Delay: " );
 }
