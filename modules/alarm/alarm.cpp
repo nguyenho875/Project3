@@ -30,11 +30,6 @@ void alarmInit()
     alarm.input();
 }
 
-bool alarmStateRead()
-{
-    return alarmState;
-}
-
 void alarmOn() 
 {
     alarm.output();

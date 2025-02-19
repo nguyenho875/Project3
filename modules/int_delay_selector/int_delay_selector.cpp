@@ -15,8 +15,9 @@ AnalogIn intDelaySelector(A2);
 //=====[Declaration of external public global variables]======================
 
 //=====[Declaration and initialization of public global variables]=============
-int intTime = 0;
-int timeDisplay = 0;
+
+int intTimeMotor = 0;
+int intTimeDisplay = 0;
 float potIntRead = 0.0;
 
 //=====[Declaration and initialization of private global variables]============
@@ -25,34 +26,34 @@ float potIntRead = 0.0;
 static float intDelaySelectorRead();
 
 //=====[Implementations of public functions]===================================
-int intDelaySelectorUpdate() {
+int intDelaySelectorMotorUpdate() {
     float potIntRead = intDelaySelectorRead();
 
     if (potIntRead < 0.1) {
-        intTime = 167;
+        intTimeMotor = 167; //approximated from testing with motor using timer
     } 
     else if (potIntRead >= 0.1 && potIntRead <= 0.2) {
-        intTime = 333;
+        intTimeMotor = 333; //approximated from testing with motor using timer
     }
     else{
-        intTime = 445;
+        intTimeMotor = 445; //approximated from testing with motor using timer
     }
-    return intTime;
+    return intTimeMotor;
 }
 
-int intDelaySelectorDisplay() {
+int intDelaySelectorDisplayUpdate() {
     float potIntRead = intDelaySelectorRead();
 
     if (potIntRead < 0.1) {
-        timeDisplay = 3;
+        intTimeDisplay = 3;
     } 
     else if (potIntRead >= 0.1 && potIntRead <= 0.2) {
-        timeDisplay = 6;
+        intTimeDisplay = 6;
     }
     else{
-        timeDisplay = 8;
+        intTimeDisplay = 8;
     }
-    return timeDisplay;
+    return intTimeDisplay;
 }
 
 //=====[Implementations of private functions]==================================

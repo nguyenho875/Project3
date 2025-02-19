@@ -13,10 +13,9 @@ typedef enum {
 
 //=====[Declarations (prototypes) of public functions]=========================
 
-void ignitionButtonInit();                 // initialize ignition button
-bool ignitionButtonRead();                 // read state of button (pressed or released)
-bool ignitionButtonReleasedEventUpdate();  // detect ignition button when pressed and released, 
-                                           // note to use only with engineOn condition 
+void ignitionButtonInit();                // initialize ignition button
+bool ignitionButtonRead();                // read state of button (pressed or released)
+bool ignitionButtonReleasedEventUpdate(); // detect ignition button when pressed and released (to turn off engine)
 
 //=====[#include guards - end]=================================================
 
