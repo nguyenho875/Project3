@@ -28,13 +28,13 @@ static float wiperModeSelectorRead();
 wiperMode_t wiperModeSelectorUpdate() {
     potWiperRead = wiperModeSelectorRead();
     
-    if (potWiperRead <= 0.25) {
+    if (potWiperRead <= 0.05) {
         wiperMode = OFF_MODE;
     } 
-    else if (potWiperRead > 0.25 && potWiperRead <= 0.5) {
+    else if (potWiperRead > 0.05 && potWiperRead <= 0.15) {
         wiperMode = LOW_MODE;
     }
-    else if (potWiperRead > 0.5 && potWiperRead <= 0.75) {
+    else if (potWiperRead > 0.15 && potWiperRead <= 0.375) {
         wiperMode = HIGH_MODE;
     }
     else {
