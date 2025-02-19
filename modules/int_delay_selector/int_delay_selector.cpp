@@ -16,6 +16,7 @@ AnalogIn intDelaySelector(A2);
 
 //=====[Declaration and initialization of public global variables]=============
 int intTime = 0;
+int timeDisplay = 0;
 float potIntRead = 0.0;
 
 //=====[Declaration and initialization of private global variables]============
@@ -37,6 +38,21 @@ int intDelaySelectorUpdate() {
         intTime = 445;
     }
     return intTime;
+}
+
+int intDelaySelectorDisplay() {
+    float potIntRead = intDelaySelectorRead();
+
+    if (potIntRead < 0.1) {
+        timeDisplay = 3;
+    } 
+    else if (potIntRead >= 0.1 && potIntRead <= 0.2) {
+        timeDisplay = 6;
+    }
+    else{
+        timeDisplay = 8;
+    }
+    return timeDisplay;
 }
 
 //=====[Implementations of private functions]==================================
