@@ -73,6 +73,7 @@ void wiperSubsystemUpdate()
         displayStringWrite(intString);
         displayCharPositionWrite(12, 1);
         displayStringWrite("s");
+
     }
 }
 

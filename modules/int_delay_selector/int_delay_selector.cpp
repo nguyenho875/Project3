@@ -15,6 +15,7 @@ AnalogIn intDelaySelector(A2);
 //=====[Declaration of external public global variables]======================
 
 //=====[Declaration and initialization of public global variables]=============
+
 int intTimeMotor = 0;
 int intTimeDisplay = 0;
 float potIntRead = 0.0;
