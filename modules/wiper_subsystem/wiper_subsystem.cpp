@@ -64,9 +64,11 @@ void wiperSubsystemUpdate()
         displayStringWrite( "INT " );
 
         char intString[10];
-        sprintf(intString, "%d", intDelaySelectorUpdate());
+        sprintf(intString, "%d", intDelaySelectorDisplay());
         displayCharPositionWrite ( 11,1 );
         displayStringWrite( intString );
+        displayCharPositionWrite ( 12,1 );
+        displayStringWrite( "s" );
     }
 }
 
