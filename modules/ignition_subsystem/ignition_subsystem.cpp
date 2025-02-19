@@ -1,5 +1,4 @@
 //=====[Libraries]=============================================================
-
 #include "arm_book_lib.h"
 
 #include "ignition_subsystem.h"
@@ -25,28 +24,22 @@ bool engineOn = false;
 
 //=====[Declarations (prototypes) of private functions]========================
 static bool checkSeatsandSeatbelts();
-static void ignitionSubsytemTurnOn();
-static void ignitionSubsystemTurnOff();
+static void ignitionSubsystemToggle();
 
 //=====[Implementations of public functions]===================================
 
 void ignitionSubsystemInit()
 {
-    alarmInit(); 
-    ignitionButtonInit();  
-    indicatorLedsInit(); 
-    seatsAndSeatbeltsInit(); 
+    alarmInit();
+    ignitionButtonInit();
+    indicatorLedsInit();
+    seatsAndSeatbeltsInit();
 }
 
 void ignitionSubsystemUpdate()
 {   
-    if (!engineOn) {
-        checkSeatsandSeatbelts();
-        ignitionSubsytemTurnOn();
-    }
-    else {
-        ignitionSubsystemTurnOff();
-    }
+    checkSeatsandSeatbelts();
+    ignitionSubsystemToggle(); 
 }
 
 bool engineStateUpdate() {
@@ -55,62 +48,73 @@ bool engineStateUpdate() {
 
 //=====[Implementations of private functions]==================================
 static bool checkSeatsandSeatbelts() {
-    static bool previousdriverSeatState = false; 
-    static bool engineReady = false;
+    static bool welcomeMessageSent = false; // Tracks if the message has been sent before
+    bool engineReady = false;
 
-    if (driverSeatOccupied() && !previousdriverSeatState) {
-        pcSerialComStringWrite( "Welcome to enhanced automobile system model 218-W24\r\n\r\n" );
-        previousdriverSeatState = true;  // Set flag to prevent reprinting
+    // Print welcome message when the driver sits down
+    if (driverSeatOccupied() && !welcomeMessageSent) {
+        pcSerialComStringWrite("Welcome to enhanced automobile system model 218-W24\r\n");
+        welcomeMessageSent = true; // Prevents further messages
     }
+
+    // Check if all conditions are met for the engine to be ready
     if (driverSeatOccupied() && passengerSeatOccupied() && driverSeatbeltFastened() && passengerSeatbeltFastened()) {
         engineReady = true;
-        engineReadyLedUpdate( true );
+        engineReadyLedUpdate(true);
+    } else {
+        engineReadyLedUpdate(false);
     }
+
     return engineReady;
 }
 
-static void ignitionSubsytemTurnOn() {
-    static bool previousIgnitionButtonState = false; 
-    if (!engineOn && ignitionButtonRead() && !previousIgnitionButtonState) {
-        delay(100);
-        if ( checkSeatsandSeatbelts()) {
-            alarmOff();
-            engineReadyLedUpdate( false );
-            engineRunningLedUpdate ( true ) ;
-            pcSerialComStringWrite( "Engine started!\r\n" );
-            previousIgnitionButtonState = true;  // Set flag to prevent reprinting
-            engineOn = true;
-        } 
-        else {
-            alarmOn(); 
-            pcSerialComStringWrite( "Ignition inhibited!\r\n" );
-            if (!driverSeatOccupied()) {
-                pcSerialComStringWrite( "Driver seat not occupied.\r\n" );
+static void ignitionSubsystemToggle() {
+    static bool previousIgnitionButtonState = false;
+    static bool engineToggleRequested = false; // Tracks if we're waiting for the next button press to toggle engine state
+
+    bool currentIgnitionButtonState = ignitionButtonRead();
+
+    if (currentIgnitionButtonState && !previousIgnitionButtonState) {
+
+        if (!engineOn) { 
+            if (checkSeatsandSeatbelts()) {
+                alarmOff();
+                engineReadyLedUpdate(false);
+                engineRunningLedUpdate(true);
+                pcSerialComStringWrite("Engine started!\r\n");
+                engineOn = true;
+            } 
+            else {
+                alarmOn();
+                pcSerialComStringWrite("Ignition inhibited!\r\n");
+
+                if (!driverSeatOccupied()) {
+                    pcSerialComStringWrite("Driver seat not occupied.\r\n");
+                }
+                if (!passengerSeatOccupied()) {
+                    pcSerialComStringWrite("Passenger seat not occupied.\r\n");
+                }
+                if (!driverSeatbeltFastened()) {
+                    pcSerialComStringWrite("Driver seatbelt not fastened.\r\n");
+                }
+                if (!passengerSeatbeltFastened()) {
+                    pcSerialComStringWrite("Passenger seatbelt not fastened.\r\n");
+                }
             }
-            if (!passengerSeatOccupied()) {
-                pcSerialComStringWrite( "Passenger seat not occupied.\r\n" );
-            }
-            if (!driverSeatbeltFastened()) {
-                pcSerialComStringWrite( "Driver seatbelt not fastened.\r\n" );
-            }
-            if (!passengerSeatbeltFastened()) {
-                pcSerialComStringWrite( "Passenger seatbelt not fastened.\r\n" );
-            }
-            previousIgnitionButtonState = true;  // Set flag to prevent reprinting
+        } else { // Engine is ON, mark request to turn OFF
+            engineToggleRequested = true;
         }
     }
-    if (!engineOn && !ignitionButtonRead()) {
-        previousIgnitionButtonState = false;
-    }
-}
 
-static void ignitionSubsystemTurnOff() {
-    static bool engineOffState = false; 
-
-    if (engineOn && ignitionButtonReleasedEventUpdate()) {
-        engineOn = false;
-        pcSerialComStringWrite( "Engine stopeped!\r\n" );
-        engineRunningLedUpdate ( false ) ;
-        engineOffState = true;  // Set flag to prevent reprinting
+    // Detect button release event after requesting toggle
+    if (!currentIgnitionButtonState && previousIgnitionButtonState) {
+        if (engineOn && engineToggleRequested) { // Only turn OFF if it was requested
+            engineOn = false;
+            engineRunningLedUpdate(false);
+            pcSerialComStringWrite("Engine stopped!\r\n");
+            engineToggleRequested = false; // Reset toggle request
+        }
     }
+    // Update previous button state
+    previousIgnitionButtonState = currentIgnitionButtonState;
 }
