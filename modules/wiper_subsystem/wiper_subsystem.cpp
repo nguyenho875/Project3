@@ -39,29 +39,29 @@ void wiperSubsystemUpdate()
 {
     if (!engineStateUpdate() || wiperModeSelectorUpdate() == OFF_MODE) {
         displayCharPositionWrite ( 12,0 );
-        displayStringWrite( "OFF" );
+        displayStringWrite( "OFF " );
         displayCharPositionWrite ( 11,1 );
-        displayStringWrite( "-" );
+        displayStringWrite( "-    " );
         // mechanism to turn off motor while running is already implemented in motorRun functions
     }
     else if (engineStateUpdate() && wiperModeSelectorUpdate() == LOW_MODE) {
         motorRunLow();
         displayCharPositionWrite ( 12,0 );
-        displayStringWrite( "LOW" );
+        displayStringWrite( "LOW " );
         displayCharPositionWrite ( 11,1 );
-        displayStringWrite( "-" );
+        displayStringWrite( "-    " );
     }
     else if (engineStateUpdate() && wiperModeSelectorUpdate() == HIGH_MODE) {
         motorRunHigh();
         displayCharPositionWrite ( 12,0 );
         displayStringWrite( "HIGH" );
         displayCharPositionWrite ( 11,1 );
-        displayStringWrite( "-" );
+        displayStringWrite( "-    " );
     }
     else if (engineStateUpdate() && wiperModeSelectorUpdate() == INT_MODE) {
         motorRunInt(intDelaySelectorUpdate());
         displayCharPositionWrite ( 12,0 );
-        displayStringWrite( "INT" );
+        displayStringWrite( "INT " );
 
         char intString[10];
         sprintf(intString, "%d", intDelaySelectorUpdate());

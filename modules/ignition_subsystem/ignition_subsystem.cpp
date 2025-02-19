@@ -72,6 +72,7 @@ static bool checkSeatsandSeatbelts() {
 static void ignitionSubsytemTurnOn() {
     static bool previousIgnitionButtonState = false; 
     if (!engineOn && ignitionButtonRead() && !previousIgnitionButtonState) {
+        delay(100);
         if ( checkSeatsandSeatbelts()) {
             alarmOff();
             engineReadyLedUpdate( false );

@@ -33,7 +33,7 @@ void motorOff() {
 }
 
 void motorRunHigh() {
-    motor.write(DUTY_MIN);
+    //motor.write(DUTY_MIN);
     static int accumulatedTime = 0;
     static float duty = DUTY_MIN;  
     static float dutyStep = DUTY_STEP; 
@@ -67,7 +67,7 @@ void motorRunHigh() {
 }
 
 void motorRunLow() {
-    motor.write(DUTY_MIN);
+    //motor.write(DUTY_MIN);
     static int accumulatedTime = 0;
     static float duty = DUTY_MIN;  
     static float dutyStep = DUTY_STEP; 
@@ -101,7 +101,7 @@ void motorRunLow() {
 }
 
 void motorRunInt(int intTime) {
-    motor.write(DUTY_MIN);
+    //motor.write(DUTY_MIN);
     static int accumulatedTimeDuty = 0;
     static int accumulatedTimeInt = 0;
     static float duty = DUTY_MIN;  
@@ -144,9 +144,4 @@ void motorRunInt(int intTime) {
         dutyStep = DUTY_STEP;
     }
 }
-
-
-
-
-
 //=====[Implementations of private functions]==================================

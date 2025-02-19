@@ -6,12 +6,12 @@
 //=====[Declaration of public defines]=========================================
 #define DUTY_MIN 0.0375      // duty cycle at 0 degrees
 #define DUTY_MAX 0.0654167   // duty cycle at 67 degrees
-#define DUTY_STEP 0.0004167  // duty cycle for 1 degree step increase
+#define DUTY_STEP 0.004  // duty cycle for 1 degree step increase
 
 #define PERIOD 0.02
 
-#define HIGH_DELAY_MS 4    // delay time between each 1 degree step for high speed
-#define LOW_DELAY_MS 6     // delay time between each 1 degree step for low speed
+#define HIGH_DELAY_MS 2    // delay time between each 1 degree step for high speed
+#define LOW_DELAY_MS 3     // delay time between each 1 degree step for low speed
 
 //=====[Declaration of public data types]======================================
 

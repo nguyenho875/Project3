@@ -10,7 +10,7 @@
 //=====[Declaration of private data types]=====================================
 
 //=====[Declaration and initialization of public global objects]===============
-AnalogIn intDelaySelector(A0);
+AnalogIn intDelaySelector(A2);
 
 //=====[Declaration of external public global variables]======================
 
@@ -27,14 +27,14 @@ static float intDelaySelectorRead();
 int intDelaySelectorUpdate() {
     float potIntRead = intDelaySelectorRead();
 
-    if (potIntRead < 0.3) {
-        intTime = 3000;
+    if (potIntRead < 0.1) {
+        intTime = 167;
     } 
-    else if (potIntRead >= 0.3 && potIntRead <= 0.6) {
-        intTime = 6000;
+    else if (potIntRead >= 0.1 && potIntRead <= 0.2) {
+        intTime = 333;
     }
     else{
-        intTime = 8000;
+        intTime = 445;
     }
     return intTime;
 }

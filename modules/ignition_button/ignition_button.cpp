@@ -42,7 +42,7 @@ bool ignitionButtonReleasedEventUpdate()
     switch( ignitionButtonState ) {
 
     case BUTTON_UP:
-        if( ignitionButton == 1 ) {
+        if( ignitionButton == 1) {
             ignitionButtonState = BUTTON_DOWN;
         }
         break;
