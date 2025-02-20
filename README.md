@@ -46,4 +46,8 @@ The servo motor choosen for this project to implement the windshield wiper is a 
 | If OFF mode is selected or engine is turned off when motor is in hesitation in INT mode, motor stays stationary.| Pass | | |
 | If OFF mode is selected or engine is turned off when motor running, motor completes the current cycle and returns the wipers to 0 degrees| Fail | Motor returns to 0 degrees and stops, but not at the same current speed and movement.| |
 
+<br/>
+
+### Code Modular Diagram
+
 <img width="503" alt="image" src="https://github.com/user-attachments/assets/fc178d6c-460f-4fb2-895d-2ca9bb32347c" />
