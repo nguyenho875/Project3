@@ -33,7 +33,9 @@ The servo motor choosen for this project to implement the windshield wiper is a 
 | When the engine is running, stop the engine once the ignition button has been pushed and then released. | Pass | | |
 
 <br/>
+
 - Windshield wiper subsystem
+
 
 | Specification | Test Result | Comment |
 |----------|----------|----------|
