@@ -38,7 +38,8 @@ The servo motor choosen for this project to implement the windshield wiper is a 
 |----------|----------|----------|
 | Motor ramps up to 67 degrees and ramps back to 0 degrees for HIGH, LOW and INT modes and remains stationary at 0 degrees for OFF mode. | Pass   |  The open angle is not exactly 67 degrees when measured using a protractor. | |
 | Motor runs at approxiamtely 40 rpm for hgih speed mode, and 30 rpm for low and int modes. | Pass   | | |
-| Motor runs with no noticeable hestitation at either end of travel for HIGH and LOW modes, and stops for appropriate delay period according to int time selected for INT mode.  | Pass   |  Hesitation time is not exactly 3/6/8 seconds, although very close.| |
-| If any seat/seatbelt conditions are not satisfied when ignition button is pressed, sound alarm and print appropriate error message.  Allow multiple attempts  | Pass   | | | 
-| Keep the engine running even if the driver/passenger should unfasten belt and exit the vehicle.| Pass | | |
-| When the engine is running, stop the engine once the ignition button has been pushed and then released. | Pass | | |
+| Motor runs with no noticeable hestitation at either end of travel for HIGH and LOW modes, and stops for appropriate delay period according to int time selected for INT mode.  | Pass   |  Hesitation time is not exactly 3/6/8 seconds, but close enough.| |
+| Wiper mode and int delay time selected are displayed aaccordingly on LCD display  | Pass   | | | 
+| If OFF mode is selected or engine is turned off when motor is in hesitation in INT mode, motor stays stationary.| Pass | | |
+| If OFF mode is selected or engine is turned off when motor running, motor completes the current cycle and returns the wipers to 0 degrees| Fail | Motor returns to 0 degrees and stops, but not at the same speed and movement.| |
+
